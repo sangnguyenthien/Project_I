@@ -1,5 +1,5 @@
 import graphAccessToken.GetAccessTokenVer2;
-import UserInfo.GetUserInfo;
+import userInfo.UserInfo;
 
 import java.io.IOException;
 
@@ -12,7 +12,8 @@ public class Test {
         try {
             String accessToken = GetAccessTokenVer2.getAccessToken(tenantId, clientId, clientSecret);
             
-            String response = GetUserInfo.makeGraphApiRequest(accessToken);
+            //Get user info
+            String response = UserInfo.makeGraphApiRequest(accessToken);
 
             System.out.println(response);
 
