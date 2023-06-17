@@ -32,7 +32,12 @@ public class config {
     private static final String CLIENT_SECRET = "8~58Q~E5ieqWemmZpgJNLFzv2ssYDy_puXd6DcfW";
     private static final String TENANT_ID = "6e83b1ce-3e89-4213-a156-3cbca5875266";
     private static final String OBJECT_ID = "66ebefba-651f-4fe7-ab39-2b3a29b5643c";
-
+    
+    public static String getObjectID()
+    {
+        return OBJECT_ID;
+    }
+    
     public static void main(String[] args) throws IOException, InterruptedException {
         // Step 1: Get an access token
         String accessToken = getAccessToken();
