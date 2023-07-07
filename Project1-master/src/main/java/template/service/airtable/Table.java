@@ -189,6 +189,99 @@ public class Table{
         this.records.removeAll(dropList);
     }
 
+    protected static String listTables(String baseId, String personal_access_token) {
+        String endpoint = "https://api.airtable.com/v0/meta/bases/" + baseId + "/tables";
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpGet httpGet = new HttpGet(endpoint);
+            httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + personal_access_token);
+            CloseableHttpResponse response = client.execute(httpGet);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                System.out.println("Error: Could not list tables");
+                return null;
+            }
+            System.out.println("Listed tables");
+            HttpEntity entity = response.getEntity();
+            String responseString = EntityUtils.toString(entity);
+            return responseString;
+        } catch (IOException e) {
+            System.out.println("Error: Could not list tables. Exception: " + e.getMessage());
+            return null;
+        }
+    }
+
+    protected static String createTable(String name, JsonArray fields, String baseId, String personal_access_token){
+        String endpoint = "https://api.airtable.com/v0/meta/bases/" + baseId + "/tables";
+
+        HttpClient httpClient = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
+        try  {
+
+            HttpPost httpPost = new HttpPost(endpoint);
+            httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            httpPost.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + personal_access_token);
+
+            JsonObject body = new JsonObject();
+            body.addProperty("name", name);
+            body.add("fields", fields);
+
+            httpPost.setEntity(new StringEntity(body.toString()));
+
+            HttpResponse response = httpClient.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                System.out.println("Error: Could not create table: " + name);
+                return null;
+            }
+            System.out.println("Created table: " + name);
+            return EntityUtils.toString(response.getEntity());
+        } catch (IOException e) {
+            System.out.println("Error: Could not create table: " + name + ". Message: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static void main(String[] args)
+    {
+        // create a JsonParser object
+        JsonParser jsonParser = new JsonParser();
+
+        // read the JSON file into a JsonElement object
+        try {
+            JsonElement jsonElement = jsonParser.parse(new FileReader("D:\\CODE JAVA\\Project1-master\\src\\main\\java\\template\\service\\airtable\\configTable.json"));
+            JsonArray fields = new JsonArray();
+            if (jsonElement.isJsonArray()) {
+
+                // cast the JsonElement to a JsonArray object
+                //System.out.println("ABC");
+                fields = jsonElement.getAsJsonArray();
+
+            }
+
+            JsonElement jsonElement1 = jsonParser.parse(new FileReader("D:\\CODE JAVA\\Project1-master\\src\\main\\java\\template\\service\\airtable\\configAirTable.json"));
+            JsonObject access = new JsonObject();
+            if (jsonElement1.isJsonObject()) {
+
+                // cast the JsonElement to a JsonArray object
+                access = jsonElement1.getAsJsonObject();
+
+            }
+
+
+            String baseId = access.get("baseId").getAsString();
+            String personal_access_token = access.get("personal_access_token").getAsString();
+
+
+            Table.createTable("Test 7/7", fields, baseId, personal_access_token);
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+    }
+
 
 
 }
