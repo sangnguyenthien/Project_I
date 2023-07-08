@@ -13,6 +13,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import template.persistence.dto.Group;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,14 +31,14 @@ public class GroupServiceImpl implements GroupService{
         // TODO document why this constructor is empty
     }
 
-    public void createGroup(String description , String displayName , String mailNickname , String ownerId , List<String> userId){
+    public void createGroup(Group newGroup,String ownerId, List<String> userId){
         String requestUrl = "https://graph.microsoft.com/v1.0/groups";
         String requestBody = "{\n" +
-                "  \"description\": \"" + description +"\",\n" +
-                "  \"displayName\": \"" + displayName +"\",\n" +
+                "  \"description\": \"" + newGroup.getDescription() +"\",\n" +
+                "  \"displayName\": \"" + newGroup.getDisplayName() +"\",\n" +
                 "  \"groupTypes\": [],\n" +
                 "  \"mailEnabled\": false,\n" +
-                "  \"mailNickname\": \"" + mailNickname +"\",\n" +
+                "  \"mailNickname\": \"" + newGroup.getMailNickname() +"\",\n" +
                 "  \"securityEnabled\": true,\n" +
                 "  \"owners@odata.bind\": [\n" +
                 "    \"https://graph.microsoft.com/v1.0/users/" + ownerId +"\"\n" +

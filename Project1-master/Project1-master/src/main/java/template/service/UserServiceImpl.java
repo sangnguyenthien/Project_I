@@ -91,19 +91,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void createUser(String displayName, String mailNickname, String userPrincipalName, String password) throws IOException, InterruptedException {
+    public void createUser(User newUser) throws IOException, InterruptedException {
         // Step 1: Get an access token
         String accessToken = getAccessToken();
         // Step 2: Make an HTTP request to the Microsoft Graph API
         // Step 2: Create a new user
         String userJson = "{\r\n" +
                 "  \"accountEnabled\": true,\r\n" +
-                "  \"displayName\": \"" + displayName + "\",\r\n" +
-                "  \"mailNickname\": \"" + mailNickname + "\",\r\n" +
-                "  \"userPrincipalName\": \"" + userPrincipalName + "\",\r\n" +
+                "  \"displayName\": \"" + newUser.getDisplayName() + "\",\r\n" +
+                "  \"mailNickname\": \"" + newUser.getMailNickName() + "\",\r\n" +
+                "  \"userPrincipalName\": \"" + newUser.getUserPrincipalName() + "\",\r\n" +
                 "  \"passwordProfile\": {\r\n" +
                 "    \"forceChangePasswordNextSignIn\": true,\r\n" +
-                "    \"password\": \"" + password + "\"\r\n" +
+                "    \"password\": \"" + newUser.getPassword() + "\"\r\n" +
                 "  }\r\n" +
                 "}";
         URL url = new URL("https://graph.microsoft.com/v1.0/users");

@@ -13,23 +13,34 @@ public class User {
     private String surname;
     private String userPrincipalName;
     private String id;
+    private String mailNickName;
+    private String password;
 
     public User() {
     }
 
-    public User (String businessPhones , String displayName , String givenName , String jobTitle , String mobilePhone , String officeLocation , String preferredLanguage , String surname , String userPrincipalName , String id){
-        this.businessPhones = businessPhones;
+    public User(String displayName, String mailNickName, String userPrincipalName, String password) {
         this.displayName = displayName;
-        this.givenName = givenName;
-        this.jobTitle = jobTitle;
-        this.mobilePhone = mobilePhone;
-        this.officeLocation = officeLocation;
-        this.preferredLanguage = preferredLanguage;
-        this.surname = surname;
         this.userPrincipalName = userPrincipalName;
-        this.id = id;
+        this.mailNickName = mailNickName;
+        this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getMailNickName() {
+        return mailNickName;
+    }
+
+    public void setMailNickName(String mailNickName) {
+        this.mailNickName = mailNickName;
+    }
 
     public String getBusinessPhones() {
         return businessPhones;
