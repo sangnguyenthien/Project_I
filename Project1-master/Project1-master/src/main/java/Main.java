@@ -24,14 +24,29 @@ public class Main {
         /*
         //test get user
         service.getUser();*/
-
         //test create user
         /*
         service.createUser("John Doe" , "johndoe" ,"johndoe@3pjv85.onmicrosoft.com" ,"P@ssw0rd123");
-
+        */
+        /*
+        //test get user by principal name
+        String principalName = "hapiH@3pjv85.onmicrosoft.com";
+        service.getUserByPrincipalName(principalName);
+        */
+        /*
+        //test delete user
+        service.deleteUser("97b98bf3-0b61-4c7f-bc3c-55bc997239b2");
          */
-        GroupServiceImpl service2 = new GroupServiceImpl();
 
+        /*
+        //test create multiple user from csv
+        service.createAllUsers("C:\\Users\\LamPhuss\\Downloads\\Project1-master\\users.csv");
+        */
+        /*
+        //test assign licence
+        service.assignLicense("5d22e230-ac9a-4d26-9ed8-ebc4014527");
+        GroupServiceImpl service2 = new GroupServiceImpl();
+        */
         //test create group
         /*
         String des = "Group with designated owner and members";
@@ -43,14 +58,19 @@ public class Main {
         userIds.add("88ff6ec2-3b5d-4b56-b013-ebd683870604");
         service2.createGroup(des,display,mailNick,ownerId,userIds);
         */
-
+        /*
         //test create team
         service2.createTeam("1e7ba4f2-5af5-47df-af68-394a5d62951f");
-
-        /*
-        //test create multiple user from csv
-        service.createAllUsers("C:\\Users\\LamPhuss\\Downloads\\Project1-master\\users.csv");
         */
+        /*
+        //test delete team
+        service2.deleteTeam("145f7aad-9517-48ec-b589-0d9e51f6ceff");
+           */
+        /*
+        //test add user to group
+        String groupId = "1e7ba4f2-5af5-47df-af68-394a5d62951f"; // Replace with your actual group ID
+        List<String> memberIds = List.of("3eb3c149-d420-4fb3-a00a-f46217a15920", "5d22e230-ac9a-4d26-9ed8-ebc401454827");
+        service2.addMemberToTeam(groupId,memberIds);*/
         /*
         //test add user to group
         String groupId = "1e7ba4f2-5af5-47df-af68-394a5d62951f"; // Replace with your actual group ID

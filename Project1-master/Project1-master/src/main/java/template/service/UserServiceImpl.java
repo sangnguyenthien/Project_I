@@ -3,6 +3,7 @@ package template.service;
 import com.google.gson.*;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import org.json.JSONObject;
 import template.persistence.dto.User;
 
 import java.io.*;
@@ -57,9 +58,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void getUserByPrincipalName(String pricipalName){
-
-        String principalName = "hapiH@3pjv85.onmicrosoft.com";
+    public void getUserByPrincipalName(String principalName){
         String graphEndpoint = String.format("https://graph.microsoft.com/v1.0/users/%s", principalName);
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(graphEndpoint).openConnection();
@@ -72,7 +71,16 @@ public class UserServiceImpl implements UserService {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String response = reader.readLine();
                 reader.close();
-                System.out.println(response);
+                JSONObject jsonObject = new JSONObject(response);
+
+                StringBuilder sb = new StringBuilder();
+                for (String key : jsonObject.keySet()) {
+                    Object value = jsonObject.get(key);
+                    sb.append(key).append(": ").append(value).append("\n");
+                }
+
+                String resultString = sb.toString();
+                System.out.println(resultString);
             } else if (con.getResponseCode() == 404) {
                 System.out.println("User not found");
             } else {
@@ -335,6 +343,9 @@ public class UserServiceImpl implements UserService {
                 // Parse the JSON string
                 JsonObject jsonObject = gson.fromJson(errorResponse.toString(), JsonObject.class);
                 // Get the value of the "message" property
+                if (jsonObject.getAsJsonObject("error").get("code").getAsString().equals("Request_ResourceNotFound")){
+                    System.out.println("User does not exist");
+                }
                 String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
                 // Print the error message
                 System.out.println("Error: " + message);

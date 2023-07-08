@@ -108,16 +108,13 @@ public class GroupServiceImpl implements GroupService{
             Gson gson = new GsonBuilder().create();
             HttpEntity entity = response.getEntity();
             String responseBody = EntityUtils.toString(entity);
-            JSONObject json = new JSONObject(responseBody);
 
-            System.out.println(json);
+
             if (response.getStatusLine().getStatusCode() >= 400) {
-                // Parse the JSON string
-                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
-                // Get the value of the "message" property
-                String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
-                // Print the error message
-                System.out.println("Error: " + message);
+                JSONObject json = new JSONObject(responseBody);
+                JSONObject errorJson = json.getJSONObject("error");
+                String innerErrorMessage = errorJson.getJSONObject("innerError").getString("message");
+                System.out.println(innerErrorMessage);
             } else {
                 System.out.println("Create team success");
                 System.out.println(responseBody);
@@ -142,17 +139,21 @@ public class GroupServiceImpl implements GroupService{
             // Read the HTTP response body
             Gson gson = new GsonBuilder().create();
             HttpEntity entity = response.getEntity();
-            String responseBody = EntityUtils.toString(entity);
+
             if (response.getStatusLine().getStatusCode() >= 400) {
+                String responseBody = EntityUtils.toString(entity);
                 // Parse the JSON string
                 JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
+                if (jsonObject.getAsJsonObject("error").get("code").getAsString().equals("Request_ResourceNotFound")){
+                    System.out.println("Group does not exist");
+                }
                 // Get the value of the "message" property
                 String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
                 // Print the error message
                 System.out.println("Error: " + message);
             } else {
                 System.out.println("Delete team success");
-                System.out.println(responseBody);
+
             }
         } catch (IOException e) {
             e.printStackTrace();
