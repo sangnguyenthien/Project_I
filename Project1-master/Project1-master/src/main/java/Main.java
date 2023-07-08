@@ -23,8 +23,9 @@ import static template.api_config.config.getAccessToken;
 
 public class Main {
     public static void main(String[] args) throws Exception{
-        UserServiceImpl service = new UserServiceImpl();
         /*
+        UserServiceImpl service = new UserServiceImpl();
+
         //test get user
         service.getUser();*/
         /*
@@ -51,8 +52,9 @@ public class Main {
         service.assignLicense("5d22e230-ac9a-4d26-9ed8-ebc4014527");
 
         */
-        GroupServiceImpl service2 = new GroupServiceImpl();
         /*
+        GroupServiceImpl service2 = new GroupServiceImpl();
+
         //test create group
         String des = "Group with designated owner and members";
 
@@ -83,6 +85,7 @@ public class Main {
         String groupId = "1e7ba4f2-5af5-47df-af68-394a5d62951f"; // Replace with your actual group ID
         List<String> memberIds = List.of("3eb3c149-d420-4fb3-a00a-f46217a15920", "5d22e230-ac9a-4d26-9ed8-ebc401454827");
         service2.addMemberToTeam(groupId,memberIds);*/
+
     }
 
 

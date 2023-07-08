@@ -11,4 +11,5 @@ public interface UserService {
     void assignLicense(String userId);
     void createAllUsers(String path);
     void getUserByPrincipalName(String pricipalName);
+
 }
