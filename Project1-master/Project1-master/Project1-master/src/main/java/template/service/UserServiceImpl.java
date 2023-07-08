@@ -15,6 +15,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.FileHandler;
@@ -310,36 +311,25 @@ public class UserServiceImpl implements UserService {
     }
 
     public void createAllUsers(String path) {
-        List<JsonObject> listAllUser = new ArrayList<>();
-        String logFilePath = "batch_request.log";
+        List<JsonObject> listAllUser = new ArrayList();
+
         try {
-            File logFile = new File(logFilePath);
-            if (!logFile.exists()) {
-                logFile.createNewFile();
-            }
-            if (logFile.isFile() && logFile.canWrite()) {
-                FileHandler fh = new FileHandler(logFilePath, true);
-                SimpleFormatter formatter = new SimpleFormatter();
-                fh.setFormatter(formatter);
-                logger.addHandler(fh);
-            } else {
-                throw new SecurityException("Cannot create log file due to insufficient permissions.");
-            }
-        } catch (IOException e) {
-            logger.warning("Error creating log file: " + e.getMessage());
-        } catch (SecurityException e) {
-            logger.warning("Error creating log file: " + e.getMessage());
+            FileHandler fh = new FileHandler("batch_request.log");
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+            logger.addHandler(fh);
+        } catch (IOException var10) {
+            logger.warning("Error creating log file: " + var10.getMessage());
         }
-        try  {
+
+        try {
             CSVReader reader = new CSVReader(new FileReader(path));
             List<String[]> rows = reader.readAll();
+            Iterator var5 = rows.iterator();
 
-
-            // Process each row
-            for (String[] row : rows) {
+            while (var5.hasNext()) {
+                String[] row = (String[]) var5.next();
                 JsonObject user = new JsonObject();
-
-                // Set the user's properties
                 user.addProperty("accountEnabled", true);
                 user.addProperty("displayName", row[0]);
                 user.addProperty("mailNickname", row[1]);
@@ -348,33 +338,38 @@ public class UserServiceImpl implements UserService {
                 passwordProfile.addProperty("forceChangePasswordNextSignIn", true);
                 passwordProfile.addProperty("password", row[3]);
                 user.add("passwordProfile", passwordProfile);
-
-                // Add the user to the array
                 listAllUser.add(user);
             }
-        }catch (FileNotFoundException e) {
-            // Xử lý ngoại lệ FileNotFoundException ở đây
-            System.out.println("File not found: " + e.getMessage());
-        }catch (CsvException | IOException e ) {
-            System.out.println("Error");
+        } catch (FileNotFoundException var11) {
+            System.out.println("File not found: " + var11.getMessage());
+        } catch (IOException | CsvException var12) {
+            var12.printStackTrace();
         }
-        List<JsonObject> listUser = new ArrayList<>();
 
+        List<JsonObject> listUser = new ArrayList();
+        Iterator var16 = listAllUser.iterator();
 
-        for (JsonObject user : listAllUser) {
-            listUser.add(user);
-            if (listUser.size() == 20 || listAllUser.indexOf(user) == listAllUser.size() - 1) {
-                try {
-                    createMultipleUsersInOneRequest(listUser);
-                } catch (IOException | InterruptedException e) {
-                    System.out.println("Error");
-                    Thread.currentThread().interrupt();
+        while (true) {
+            JsonObject user;
+            do {
+                if (!var16.hasNext()) {
+                    logger.getHandlers()[0].close();
+                    return;
                 }
-                listUser.clear();
-            }
-        }
-        logger.getHandlers()[0].close();
 
+                user = (JsonObject) var16.next();
+                listUser.add(user);
+            } while (listUser.size() != 20 && listAllUser.indexOf(user) != listAllUser.size() - 1);
+
+            try {
+                createMultipleUsersInOneRequest(listUser);
+            } catch (InterruptedException | IOException var9) {
+                var9.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+
+            listUser.clear();
+        }
     }
 
 
