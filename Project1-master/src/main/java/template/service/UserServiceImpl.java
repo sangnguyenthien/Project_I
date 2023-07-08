@@ -48,6 +48,21 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+
+    public String getUserAsJSON() throws IOException, InterruptedException
+    {
+        String graphEndpoint = "https://graph.microsoft.com/v1.0/users";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(graphEndpoint))
+                .header("Authorization", "Bearer " + token)
+                .build();
+
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
+
+    
     public void createUser(String displayName ,String mailNickname ,String userPrincipalName ,String password) throws IOException, InterruptedException{
         // Step 1: Get an access token
         String accessToken = getAccessToken();
