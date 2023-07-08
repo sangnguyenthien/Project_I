@@ -18,6 +18,7 @@ import java.util.Scanner;
 public class CLI {
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        //Change the value of configAirTable and config to absolute path of configAirTable.json and config.json respectively
         String configAirTable = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\template\service\airtable\configAirTable.json";
         String config = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\template\team_config\config.json";
 
