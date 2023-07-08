@@ -119,7 +119,7 @@ public class GroupServiceImpl implements GroupService {
                 groupId = json.getString("id");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
         return groupId;
     }
@@ -160,7 +160,7 @@ public class GroupServiceImpl implements GroupService {
                 System.out.println(responseBody);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
     }
 
@@ -196,7 +196,7 @@ public class GroupServiceImpl implements GroupService {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
     }
 
@@ -241,7 +241,7 @@ public class GroupServiceImpl implements GroupService {
                 System.out.println("Update group members success");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
     }
 
