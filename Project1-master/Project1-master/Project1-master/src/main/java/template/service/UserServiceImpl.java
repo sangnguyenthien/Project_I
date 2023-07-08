@@ -343,7 +343,7 @@ public class UserServiceImpl implements UserService {
         } catch (FileNotFoundException var11) {
             System.out.println("File not found: " + var11.getMessage());
         } catch (IOException | CsvException var12) {
-            var12.printStackTrace();
+            System.out.println("Error");
         }
 
         List<JsonObject> listUser = new ArrayList();
