@@ -22,6 +22,9 @@ import java.util.*;
 public class config {
     private static final Logger logger = Logger.getLogger(config.class.getName());
 
+    //Change the value of variable config to absolute path of config.json
+    public static String config = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\template\team_config\config.json"
+
     public static void main(String[] args) throws IOException, InterruptedException {
         String graphEndpoint = "https://graph.microsoft.com/v1.0/users";
         String token = getAccessToken(); // Replace with your actual access token
@@ -89,7 +92,7 @@ public class config {
     }
 
     public static String getAccessToken() throws IOException, InterruptedException {
-        JsonObject accessJson = JsonTool.getAccessInfo("template/team_config/config.json");
+        JsonObject accessJson = JsonTool.getAccessInfo(config);
         String TENANT_ID = accessJson.get("TENANT_ID").getAsString();
         String CLIENT_ID = accessJson.get("CLIENT_ID").getAsString();
         String CLIENT_SECRET = accessJson.get("CLIENT_SECRET").getAsString();
