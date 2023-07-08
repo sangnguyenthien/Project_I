@@ -3,6 +3,16 @@ package template.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,44 +53,32 @@ public class GroupServiceImpl implements GroupService{
         requestBody += "  ]\n" +
                 "}";
         try {
-            // Create a new URL object
-            URL url = new URL(requestUrl);
-            // Open a new HTTP connection
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            // Set the HTTP request method to POST
-            con.setRequestMethod("POST");
+            // Create a new HttpClient object
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            // Create a new HttpPost object
+            HttpPost httpPost = new HttpPost(requestUrl);
             // Set the HTTP request headers
-            con.setRequestProperty("Authorization", "Bearer " + token);
-            con.setRequestProperty("Content-Type", "application/json");
-            // Enable output and disable input
-            con.setDoOutput(true);
-            // Write the request body to the output stream
-            con.getOutputStream().write(requestBody.getBytes("utf-8"));
-            // Get the HTTP response code
-            int responseCode = con.getResponseCode();
+            httpPost.addHeader("Authorization", "Bearer " + token);
+            httpPost.addHeader("Content-Type", "application/json");
+            // Set the HTTP request body
+            httpPost.setEntity(new StringEntity(requestBody));
+            // Execute the HTTP request
+            HttpResponse response = httpClient.execute(httpPost);
             // Read the HTTP response body
             Gson gson = new GsonBuilder().create();
-            BufferedReader in;
-            if (responseCode >= 400) {
-                in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                StringBuilder errorResponse = new StringBuilder();
-                String line;
-                while ((line = in.readLine()) != null) {
-                    errorResponse.append(line);
-                }
+            HttpEntity entity = response.getEntity();
+            String responseBody = EntityUtils.toString(entity);
+            if (response.getStatusLine().getStatusCode() >= 400) {
                 // Parse the JSON string
-                JsonObject jsonObject = gson.fromJson(errorResponse.toString(), JsonObject.class);
+                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
                 // Get the value of the "message" property
                 String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
                 // Print the error message
                 System.out.println("Error: " + message);
             } else {
-                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 System.out.println("Create group success");
-                System.out.println(in.readLine());
+                System.out.println(responseBody);
             }
-
-            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,84 +90,118 @@ public class GroupServiceImpl implements GroupService{
                 + "\"group@odata.bind\": \"https://graph.microsoft.com/v1.0/groups/" + groupId + "\""
                 + "}";
 
-
-            // Set up the request URL
-            String requestUrl = "https://graph.microsoft.com/v1.0/teams";
-        try{
-            // Set up the HTTP request
-            URL url = new URL(requestUrl);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Authorization", "Bearer " + token);
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setDoOutput(true);
-            // Send the payload in the request body
-            con.getOutputStream().write(requestBody.getBytes("utf-8"));
-            int responseCode = con.getResponseCode();
-            // Read the response from the server
+        // Set up the request URL
+        String requestUrl = "https://graph.microsoft.com/v1.0/teams";
+        try {
+            // Create a new HttpClient object
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            // Create a new HttpPost object
+            HttpPost httpPost = new HttpPost(requestUrl);
+            // Set the HTTP request headers
+            httpPost.addHeader("Authorization", "Bearer " + token);
+            httpPost.addHeader("Content-Type", "application/json");
+            // Set the HTTP request body
+            httpPost.setEntity(new StringEntity(requestBody));
+            // Execute the HTTP request
+            HttpResponse response = httpClient.execute(httpPost);
+            // Read the HTTP response body
             Gson gson = new GsonBuilder().create();
-            BufferedReader in;
-            if (responseCode >= 400) {
-                in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                StringBuilder errorResponse = new StringBuilder();
-                String line;
-                while ((line = in.readLine()) != null) {
-                    errorResponse.append(line);
-                }
+            HttpEntity entity = response.getEntity();
+            String responseBody = EntityUtils.toString(entity);
+            JSONObject json = new JSONObject(responseBody);
+
+            System.out.println(json);
+            if (response.getStatusLine().getStatusCode() >= 400) {
                 // Parse the JSON string
-                JsonObject jsonObject = gson.fromJson(errorResponse.toString(), JsonObject.class);
+                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
                 // Get the value of the "message" property
                 String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
                 // Print the error message
                 System.out.println("Error: " + message);
             } else {
-                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 System.out.println("Create team success");
-                System.out.println(in.readLine());
+                System.out.println(responseBody);
             }
-            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void deleteTeam(String groupId) {
-
-            // Set up the request URL
-            String requestUrl = "https://graph.microsoft.com/v1.0/groups/" + groupId;
-        try{
-            // Set up the HTTP request
-            URL url = new URL(requestUrl);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("DELETE");
-            con.setRequestProperty("Authorization", "Bearer " + token);
-
-            // Check the response code
-            int responseCode = con.getResponseCode();
+        // Set up the request URL
+        String requestUrl = "https://graph.microsoft.com/v1.0/groups/" + groupId;
+        try {
+            // Create a new HttpClient object
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            // Create a new HttpDelete object
+            HttpDelete httpDelete = new HttpDelete(requestUrl);
+            // Set the HTTP request headers
+            httpDelete.addHeader("Authorization", "Bearer " + token);
+            // Execute the HTTP request
+            HttpResponse response = httpClient.execute(httpDelete);
+            // Read the HTTP response body
             Gson gson = new GsonBuilder().create();
-            BufferedReader in;
-            if (responseCode >= 400) {
-                in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                StringBuilder errorResponse = new StringBuilder();
-                String line;
-                while ((line = in.readLine()) != null) {
-                    errorResponse.append(line);
-                }
+            HttpEntity entity = response.getEntity();
+            String responseBody = EntityUtils.toString(entity);
+            if (response.getStatusLine().getStatusCode() >= 400) {
                 // Parse the JSON string
-                JsonObject jsonObject = gson.fromJson(errorResponse.toString(), JsonObject.class);
+                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
                 // Get the value of the "message" property
                 String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
                 // Print the error message
                 System.out.println("Error: " + message);
             } else {
-                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 System.out.println("Delete team success");
-                System.out.println(in.readLine());
+                System.out.println(responseBody);
             }
-            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    public void addMemberToTeam(String groupId,List<String> userIds){
+        String requestUrl = "https://graph.microsoft.com/v1.0/groups/" + groupId;
+        List<String> memberIds = List.of("3eb3c149-d420-4fb3-a00a-f46217a15920", "5d22e230-ac9a-4d26-9ed8-ebc401454827");
+
+        // Build the request body JSON string
+        StringBuilder membersJson = new StringBuilder("\"members@odata.bind\": [");
+        for (String memberId : memberIds) {
+            membersJson.append("\"https://graph.microsoft.com/v1.0/directoryObjects/").append(memberId).append("\",");
+        }
+        membersJson.deleteCharAt(membersJson.length() - 1);
+        membersJson.append("]");
+        String requestBody = "{" + membersJson.toString() + "}";
+
+        try {
+            // Create a new HttpClient object
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            // Create a new HttpPatch object
+            HttpPatch httpPatch = new HttpPatch(requestUrl);
+            // Set the HTTP request headers
+            httpPatch.addHeader("Authorization", "Bearer " + token);
+            httpPatch.addHeader("Content-Type", "application/json");
+            // Set the HTTP request body (if requestBody is not null)
+            if (requestBody != null) {
+                httpPatch.setEntity(new StringEntity(requestBody));
+            }
+            // Execute the HTTP request
+            HttpResponse response = httpClient.execute(httpPatch);
+            // Read the HTTP response body
+            Gson gson = new GsonBuilder().create();
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                // Parse the JSON string
+                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
+                // Get the value of the "message" property
+                String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
+                // Print the error message
+                System.out.println("Error: " + message);
+            } else {
+                System.out.println("Update group members success");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

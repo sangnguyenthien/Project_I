@@ -3,6 +3,7 @@ package template.api_config;
 import com.google.gson.*;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import org.json.JSONObject;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +25,41 @@ public class config {
     private static final String TENANT_ID = "6e83b1ce-3e89-4213-a156-3cbca5875266";
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        deleteAllUsers("users.csv");
+        String graphEndpoint = "https://graph.microsoft.com/v1.0/users";
+        String token = getAccessToken(); // Replace with your actual access token
 
-    }public static void deleteAllUsers(String path) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(graphEndpoint))
+                .header("Authorization", "Bearer " + token)
+                .build();
+
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        String jsonResponse = response.body();
+        JSONObject json = new JSONObject(response.body());
+        System.out.println(json);
+        // Parse the JSON response using Gson
+        Gson gson = new Gson();
+        Map<String, Object> map = gson.fromJson(jsonResponse, Map.class);
+        List<Map<String, Object>> valueList = (List<Map<String, Object>>) map.get("value");
+
+        // Print the properties of each user
+        /*
+        int count = 1;
+        for (Map<String, Object> valueMap : valueList) {
+            System.out.println("User " + count);
+            count += 1;
+            for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
+                String key = entry.getKey();
+                Object val = entry.getValue();
+                System.out.println(key + ": " + val);
+            }
+            System.out.println();
+        }*/
+    }
+
+
+    public static void deleteAllUsers(String path) {
         try (CSVReader reader = new CSVReader(new FileReader(path))) {
             List<String[]> rows = reader.readAll();
 

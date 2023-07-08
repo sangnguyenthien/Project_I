@@ -3,6 +3,7 @@ package template.service;
 import com.google.gson.*;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import template.persistence.dto.User;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -42,9 +43,7 @@ public class UserServiceImpl implements UserService {
         HttpClient client = HttpClient.newBuilder().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         Gson gson = new Gson();
-        System.out.println(response.body());
         Map<String, Object> map = gson.fromJson(response.body(), Map.class);
-
         List<Map<String, Object>> valueList = (List<Map<String, Object>>) map.get("value");
         int count = 1;
         for (Map<String, Object> valueMap : valueList) {
@@ -55,6 +54,32 @@ public class UserServiceImpl implements UserService {
                 Object val = entry.getValue();
                 System.out.println(key + ": " + val);
             }
+        }
+    }
+
+    public void getUserByPrincipalName(String pricipalName){
+
+        String principalName = "hapiH@3pjv85.onmicrosoft.com";
+        String graphEndpoint = String.format("https://graph.microsoft.com/v1.0/users/%s", principalName);
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(graphEndpoint).openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + token);
+            con.setRequestProperty("Accept", "application/json");
+            int responseCode = con.getResponseCode();
+            System.out.println(responseCode);
+            if (responseCode == 200) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String response = reader.readLine();
+                reader.close();
+                System.out.println(response);
+            } else if (con.getResponseCode() == 404) {
+                System.out.println("User not found");
+            } else {
+                System.out.println("Request failed with response code: " + con.getResponseCode());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -134,13 +159,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public static void createMultipleUsersInOneRequest(List<JsonObject> listUser) throws IOException, InterruptedException {
-
         logger.setLevel(Level.INFO);
-
-
-
-
-
         logger.info("Creating multiple users in one request...");
         String accessToken = getAccessToken();
         JsonArray jsonArray = new JsonArray();
@@ -329,5 +348,6 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
     }
+
 
 }

@@ -8,4 +8,5 @@ public interface UserService {
     void deleteUser(String id) throws IOException, InterruptedException;
     void assignLicense(String userId);
     void createAllUsers(String path);
+    void getUserByPrincipalName(String pricipalName);
 }
