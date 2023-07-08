@@ -207,7 +207,7 @@ public class CLI {
                 List<JsonObject> fields = Organization.listUsersAsJson(token);
 
                 //token Airtable
-                JsonObject access = JsonTool.getAccessInfo("template/service/airtable/configAirTable.json").getAsJsonObject();
+                JsonObject access = JsonTool.getAccessInfo("src/main/java/template/service/airtable/configAirTable.json").getAsJsonObject();
                 String personal_access_token = access.get("personal_access_token").getAsString();
                 String baseId = access.get("baseId").getAsString();
 
@@ -251,7 +251,7 @@ public class CLI {
                 List<JsonObject> fields = GroupServiceImpl.listUsersAsJson(groupId, token);
 
                 //token Airtable
-                JsonObject access = JsonTool.getAccessInfo("template/service/airtable/configAirTable.json").getAsJsonObject();
+                JsonObject access = JsonTool.getAccessInfo("src/main/java/template/service/airtable/configAirTable.json").getAsJsonObject();
                 String personal_access_token = access.get("personal_access_token").getAsString();
                 String baseId = access.get("baseId").getAsString();
 
@@ -287,7 +287,7 @@ public class CLI {
                 Color.print_yellow("-- Write table to XLSX file --");
 
                 //token Airtable
-                JsonObject access = JsonTool.getAccessInfo("template/service/airtable/configAirTable.json").getAsJsonObject();
+                JsonObject access = JsonTool.getAccessInfo("src/main/java/template/service/airtable/configAirTable.json").getAsJsonObject();
                 String personal_access_token = access.get("personal_access_token").getAsString();
                 String baseId = access.get("baseId").getAsString();
 
