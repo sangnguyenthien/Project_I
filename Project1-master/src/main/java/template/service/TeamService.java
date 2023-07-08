@@ -96,10 +96,10 @@ public class TeamService {
                         .setCookieSpec(CookieSpecs.STANDARD).build())
                 .build();
         try{
-            HttpGet httpPost = new HttpGet(graphEndpoint);
-            httpPost.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+            HttpGet httpGet = new HttpGet(graphEndpoint);
+            httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
-            HttpResponse response = httpClient.execute(httpPost);
+            HttpResponse response = httpClient.execute(httpGet);
             if (response.getStatusLine().getStatusCode() != 200) {
                 System.out.println("Cannot list users of Team has id: " +group_id);
                 return null;
@@ -120,14 +120,25 @@ public class TeamService {
             for(int i=0; i< jsonArray.size(); i++)
             {
                 JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                if (jsonObject.has("roles")) {
+                    // Get the value of "roles" as a comma-separated String
+                    String rolesString = jsonObject.get("roles").getAsJsonArray().toString();
 
-                // Get the value of "roles" as a comma-separated String
-                String rolesString = jsonObject.get("roles").getAsJsonArray().toString();
+                    // Update the JsonObject with the new value of "roles"
+                    jsonObject.addProperty("roles", rolesString);
 
-                // Update the JsonObject with the new value of "roles"
-                jsonObject.addProperty("roles", rolesString);
+                    result.add(jsonObject);
+                }
 
-                result.add(jsonObject);
+                if (jsonObject.has("businessPhones"))
+                {
+                    // Get the value of "roles" as a comma-separated String
+                    String rolesString = jsonObject.get("businessPhones").getAsJsonArray().toString();
+
+                    // Update the JsonObject with the new value of "roles"
+                    jsonObject.addProperty("businessPhones", rolesString);
+                }
+
             }
 
             return result;
