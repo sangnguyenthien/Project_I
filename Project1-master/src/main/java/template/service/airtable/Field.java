@@ -7,10 +7,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.JsonObject;
@@ -45,8 +48,12 @@ public class Field {
     protected static String createField(JsonObject field, String baseId, String tableId, String personal_access_token)
     {
         String endpoint = "https://api.airtable.com/v0/meta/bases/" + baseId + "/tables/" + tableId + "/fields";
-        
-        try(CloseableHttpClient client = HttpClientBuilder.create().build())
+        HttpClient client = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
+
+        try
         {        
             HttpPost httpPost = new HttpPost(endpoint);
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -80,8 +87,12 @@ public class Field {
     protected static String updateField(JsonObject field, String fieldId, String baseId, String tableId, String personal_access_token)
     {
         String endpoint = "https://api.airtable.com/v0/meta/bases/" + baseId + "/tables/" + tableId + "/fields/" + "fieldId";
+        HttpClient client = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
 
-        try(CloseableHttpClient client = HttpClientBuilder.create().build())
+        try
         {        
             HttpPost httpPost = new HttpPost(endpoint);
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
