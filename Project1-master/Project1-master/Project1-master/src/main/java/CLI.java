@@ -18,6 +18,11 @@ import java.util.Scanner;
 public class CLI {
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        String configAirTable = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\template\service\airtable\configAirTable.json";
+        String config = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\template\team_config\config.json";
+
+
+        
         String general = "----------------------------------------------\n" +
                 "            ANTI-RICONS Application\n" +
                 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣤⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀\n" +
@@ -207,7 +212,7 @@ public class CLI {
                 List<JsonObject> fields = Organization.listUsersAsJson(token);
 
                 //token Airtable
-                JsonObject access = JsonTool.getAccessInfo("src/main/java/template/service/airtable/configAirTable.json").getAsJsonObject();
+                JsonObject access = JsonTool.getAccessInfo(configAirTable).getAsJsonObject();
                 String personal_access_token = access.get("personal_access_token").getAsString();
                 String baseId = access.get("baseId").getAsString();
 
@@ -251,7 +256,7 @@ public class CLI {
                 List<JsonObject> fields = GroupServiceImpl.listUsersAsJson(groupId, token);
 
                 //token Airtable
-                JsonObject access = JsonTool.getAccessInfo("src/main/java/template/service/airtable/configAirTable.json").getAsJsonObject();
+                JsonObject access = JsonTool.getAccessInfo(configAirTable.json).getAsJsonObject();
                 String personal_access_token = access.get("personal_access_token").getAsString();
                 String baseId = access.get("baseId").getAsString();
 
@@ -287,7 +292,7 @@ public class CLI {
                 Color.print_yellow("-- Write table to XLSX file --");
 
                 //token Airtable
-                JsonObject access = JsonTool.getAccessInfo("src/main/java/template/service/airtable/configAirTable.json").getAsJsonObject();
+                JsonObject access = JsonTool.getAccessInfo(configAirTable).getAsJsonObject();
                 String personal_access_token = access.get("personal_access_token").getAsString();
                 String baseId = access.get("baseId").getAsString();
 
