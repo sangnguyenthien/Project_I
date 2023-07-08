@@ -171,6 +171,7 @@ public class Table{
                 return false;
             }
             System.out.print("Progress: " + "\r" + i + "/" + full);
+            i += 1;
         }
         System.out.print("\n");
         //print Pulled all records in table name
