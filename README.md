@@ -6,6 +6,7 @@
     
 #### Configuration
     1. Download maven from https://maven.apache.org/download.cgi , then config this file in edit system environment variables (if you use window) to run the task schedule
+    2. Change all the path of json file in the code to your current absolute path
 ###### Note: you dont need to config file config.json since this file already config
 #### Set up automatical synchronous feature
     Step 1: open "laplich.bat" file in the repository and change the path to your java.exe, and change the path to "TaskScheduleForAntiRicons" class file
