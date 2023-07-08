@@ -24,7 +24,7 @@
     Step 12: hit "OK"
     Step 13: at the Actions section on the right handside click "Enable All Tasks History". Now every changes of this task will be logged at the History section
     ###### Second way
-    Step 2: open cmnd , write this script schtasks /create /tn "MyNewTask" /tr "C:\Users\LamPhuss\Desktop\laplich.bat" /sc daily /st 08:00 /ru "SYSTEM"
+    Step 2: open cmnd , write this script schtasks /create /tn "MyNewTask" /tr "C:\Users\LamPhuss\Desktop\laplich.bat" /sc daily /st 08:00 /ru "SYSTEM" (change the path and /tn : for task name and /sc for frequency of the       task and /st hh:ss for time to execute task
 # Usage <a name="usage"></a>
 Find the "CLI.java" file and Run
 
