@@ -364,7 +364,7 @@ public class UserServiceImpl implements UserService {
             try {
                 createMultipleUsersInOneRequest(listUser);
             } catch (InterruptedException | IOException var9) {
-                var9.printStackTrace();
+                System.out.println("Error");
                 Thread.currentThread().interrupt();
             }
 
