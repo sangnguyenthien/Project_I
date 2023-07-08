@@ -259,63 +259,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public void createAllUsers(String path) {
-        List<JsonObject> listAllUser = new ArrayList<>();
-        try {
-            FileHandler fh = new FileHandler("batch_request.log");
-            SimpleFormatter formatter = new SimpleFormatter();
-            fh.setFormatter(formatter);
-            logger.addHandler(fh);
-        } catch (IOException e) {
-            logger.warning("Error creating log file: " + e.getMessage());
-        }
-        try  {
-            CSVReader reader = new CSVReader(new FileReader(path));
-            List<String[]> rows = reader.readAll();
 
-
-            // Process each row
-            for (String[] row : rows) {
-                JsonObject user = new JsonObject();
-
-                // Set the user's properties
-                user.addProperty("accountEnabled", true);
-                user.addProperty("displayName", row[0]);
-                user.addProperty("mailNickname", row[1]);
-                user.addProperty("userPrincipalName", row[2]);
-                JsonObject passwordProfile = new JsonObject();
-                passwordProfile.addProperty("forceChangePasswordNextSignIn", true);
-                passwordProfile.addProperty("password", row[3]);
-                user.add("passwordProfile", passwordProfile);
-
-                // Add the user to the array
-                listAllUser.add(user);
-            }
-        }catch (FileNotFoundException e) {
-            // Xử lý ngoại lệ FileNotFoundException ở đây
-            System.out.println("File not found: " + e.getMessage());
-        }catch (CsvException | IOException e ) {
-            System.out.println("Error");
-        }
-
-        List<JsonObject> listUser = new ArrayList<>();
-
-
-        for (JsonObject user : listAllUser) {
-            listUser.add(user);
-            if (listUser.size() == 20 || listAllUser.indexOf(user) == listAllUser.size() - 1) {
-                try {
-                    createMultipleUsersInOneRequest(listUser);
-                } catch (IOException | InterruptedException e) {
-                    System.out.println("Error");
-                    Thread.currentThread().interrupt();
-                }
-                listUser.clear();
-            }
-        }
-        logger.getHandlers()[0].close();
-
-    }
 
 
     public void assignLicense(String userId) {
@@ -363,6 +307,74 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             System.out.println(e);
         }
+    }
+
+    public void createAllUsers(String path) {
+        List<JsonObject> listAllUser = new ArrayList<>();
+        String logFilePath = "batch_request.log";
+        try {
+            File logFile = new File(logFilePath);
+            if (!logFile.exists()) {
+                logFile.createNewFile();
+            }
+            if (logFile.isFile() && logFile.canWrite()) {
+                FileHandler fh = new FileHandler(logFilePath, true);
+                SimpleFormatter formatter = new SimpleFormatter();
+                fh.setFormatter(formatter);
+                logger.addHandler(fh);
+            } else {
+                throw new SecurityException("Cannot create log file due to insufficient permissions.");
+            }
+        } catch (IOException e) {
+            logger.warning("Error creating log file: " + e.getMessage());
+        } catch (SecurityException e) {
+            logger.warning("Error creating log file: " + e.getMessage());
+        }
+        try  {
+            CSVReader reader = new CSVReader(new FileReader(path));
+            List<String[]> rows = reader.readAll();
+
+
+            // Process each row
+            for (String[] row : rows) {
+                JsonObject user = new JsonObject();
+
+                // Set the user's properties
+                user.addProperty("accountEnabled", true);
+                user.addProperty("displayName", row[0]);
+                user.addProperty("mailNickname", row[1]);
+                user.addProperty("userPrincipalName", row[2]);
+                JsonObject passwordProfile = new JsonObject();
+                passwordProfile.addProperty("forceChangePasswordNextSignIn", true);
+                passwordProfile.addProperty("password", row[3]);
+                user.add("passwordProfile", passwordProfile);
+
+                // Add the user to the array
+                listAllUser.add(user);
+            }
+        }catch (FileNotFoundException e) {
+            // Xử lý ngoại lệ FileNotFoundException ở đây
+            System.out.println("File not found: " + e.getMessage());
+        }catch (CsvException | IOException e ) {
+            System.out.println("Error");
+        }
+        List<JsonObject> listUser = new ArrayList<>();
+
+
+        for (JsonObject user : listAllUser) {
+            listUser.add(user);
+            if (listUser.size() == 20 || listAllUser.indexOf(user) == listAllUser.size() - 1) {
+                try {
+                    createMultipleUsersInOneRequest(listUser);
+                } catch (IOException | InterruptedException e) {
+                    System.out.println("Error");
+                    Thread.currentThread().interrupt();
+                }
+                listUser.clear();
+            }
+        }
+        logger.getHandlers()[0].close();
+
     }
 
 
