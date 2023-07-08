@@ -64,11 +64,6 @@ public class ChannelService {
         }
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException
-    {
-        String teamId = "7e8dcfe0-1fd3-4226-aeb0-63e1cc394c39";
-        ChannelService.create(teamId, "Phu Oc Cho", "Discussion about Phu");
-    }
 }
 
 

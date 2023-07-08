@@ -103,7 +103,6 @@ public class Record {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
             return null;
         }
     }
@@ -139,7 +138,6 @@ public class Record {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
             return null;
         }
 
@@ -187,7 +185,6 @@ public class Record {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
             return null;
         }
     }
@@ -218,7 +215,6 @@ public class Record {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
             return false;
         }
     }

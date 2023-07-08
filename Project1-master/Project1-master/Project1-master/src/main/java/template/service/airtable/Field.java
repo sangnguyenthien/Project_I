@@ -77,7 +77,6 @@ public class Field {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
             return null;
         }
 
@@ -116,7 +115,6 @@ public class Field {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
             return null;
         }
     }
