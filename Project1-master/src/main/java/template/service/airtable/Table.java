@@ -1,10 +1,27 @@
 package template.service.airtable;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import template.api_config.config;
+import template.service.JsonTool;
+import template.service.TeamService;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,6 +173,7 @@ public class Table{
             }
         }
         //print Pulled all records in table name
+        System.out.println("Pulled all records in the table: " + this.name);
         return true;
     }
 
@@ -191,10 +209,14 @@ public class Table{
 
     protected static String listTables(String baseId, String personal_access_token) {
         String endpoint = "https://api.airtable.com/v0/meta/bases/" + baseId + "/tables";
-        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+        HttpClient client = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
+        try {
             HttpGet httpGet = new HttpGet(endpoint);
             httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + personal_access_token);
-            CloseableHttpResponse response = client.execute(httpGet);
+            HttpResponse response = client.execute(httpGet);
             if (response.getStatusLine().getStatusCode() != 200) {
                 System.out.println("Error: Could not list tables");
                 return null;
@@ -241,47 +263,22 @@ public class Table{
         }
     }
 
-    public static void main(String[] args)
-    {
-        // create a JsonParser object
-        JsonParser jsonParser = new JsonParser();
+    public static void main(String[] args) throws IOException, InterruptedException {
+        JsonObject fieldTable1 = JsonTool.getAccessInfoAirTable("D:\\CODE JAVA\\Project1-master\\src\\main\\java\\template\\service\\airtable\\Test 8_7 user.json");
 
-        // read the JSON file into a JsonElement object
-        try {
-            JsonElement jsonElement = jsonParser.parse(new FileReader("D:\\CODE JAVA\\Project1-master\\src\\main\\java\\template\\service\\airtable\\configTable.json"));
-            JsonArray fields = new JsonArray();
-            if (jsonElement.isJsonArray()) {
-
-                // cast the JsonElement to a JsonArray object
-                //System.out.println("ABC");
-                fields = jsonElement.getAsJsonArray();
-
-            }
-
-            JsonElement jsonElement1 = jsonParser.parse(new FileReader("D:\\CODE JAVA\\Project1-master\\src\\main\\java\\template\\service\\airtable\\configAirTable.json"));
-            JsonObject access = new JsonObject();
-            if (jsonElement1.isJsonObject()) {
-
-                // cast the JsonElement to a JsonArray object
-                access = jsonElement1.getAsJsonObject();
-
-            }
-
-
-            String baseId = access.get("baseId").getAsString();
-            String personal_access_token = access.get("personal_access_token").getAsString();
-
-
-            Table.createTable("Test 7/7", fields, baseId, personal_access_token);
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        JsonObject access = JsonTool.getAccessInfoAirTable("D:\\CODE JAVA\\Project1-master\\src\\main\\java\\template\\service\\airtable\\configAirTable.json");
+        String baseId = access.get("baseId").getAsString();
+        String personal_access_token = access.get("personal_access_token").getAsString();
 
 
 
+        String group_id = "7e8dcfe0-1fd3-4226-aeb0-63e1cc394c39";
+        String token = config.getAccessToken();
+
+        List<JsonObject> fields = TeamService.listUsersAsJson(group_id, token);
+
+        Table table1 = new Table(fieldTable1, baseId, personal_access_token);
+        table1.pullAllRecords(fields, baseId, personal_access_token);
     }
-
-
 
 }
