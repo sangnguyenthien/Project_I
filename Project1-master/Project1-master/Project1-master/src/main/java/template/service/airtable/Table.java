@@ -170,7 +170,7 @@ public class Table{
                 //print Cannot pull record: user ID in table name
                 return false;
             }
-            System.out.print("Progress: " + "\r" + i + "/" + full);
+            System.out.print("\r" + i + "/" + full);
             i += 1;
         }
         System.out.print("\n");
