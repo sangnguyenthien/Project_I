@@ -1,18 +1,27 @@
 package template.service.airtable;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import com.azure.core.http.HttpResponse;
 import com.google.gson.JsonObject;
 
 public class Record {
@@ -75,14 +84,18 @@ public class Record {
     protected static String listRecords(String tableId, String baseId, String personal_access_token)
     {
         String endpoint = "https://api.airtable.com/v0/" + baseId + "/" + tableId;
+        HttpClient client = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
 
-        try(CloseableHttpClient client = HttpClientBuilder.create().build())
+        try
         {
             HttpGet httpGet = new HttpGet(endpoint);
             httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + personal_access_token);
             
-            CloseableHttpResponse response = client.execute(httpGet);
+            HttpResponse response = client.execute(httpGet);
             
             HttpEntity entity = response.getEntity();
             String responseString = EntityUtils.toString(entity);
@@ -97,7 +110,12 @@ public class Record {
 
     protected static String updateRecord(JsonObject fields, String recordId, String tableId, String baseId, String personal_access_token) {
         String endpoint = "https://api.airtable.com/v0/" + baseId + "/" + tableId + "/" + recordId;
-        try(CloseableHttpClient client = HttpClientBuilder.create().build())
+        HttpClient client = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
+
+        try
         {
             HttpPatch httpPatch = new HttpPatch(endpoint);
             httpPatch.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -107,7 +125,7 @@ public class Record {
             body.add("fields", fields);
             httpPatch.setEntity(new StringEntity(body.toString()));
 
-            CloseableHttpResponse response = client.execute(httpPatch);
+            HttpResponse response = client.execute(httpPatch);
 
             if (response.getStatusLine().getStatusCode() == 200)
             {
@@ -130,8 +148,12 @@ public class Record {
     protected static String createRecord(JsonObject fields, String tableId, String baseId, String personal_access_token)
     {
         String endpoint = "https://api.airtable.com/v0/" + baseId + "/" + tableId;
+        HttpClient client = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
 
-        try(CloseableHttpClient client = HttpClientBuilder.create().build())
+        try
         {
             HttpPost httpPost = new HttpPost(endpoint);
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -149,7 +171,7 @@ public class Record {
 
             httpPost.setEntity(new StringEntity(fullBody.toString()));
 
-            CloseableHttpResponse response = client.execute(httpPost);
+            HttpResponse response = client.execute(httpPost);
 
             if (response.getStatusLine().getStatusCode() == 200)
             {
@@ -173,13 +195,17 @@ public class Record {
     protected static boolean dropRecord(String recordId, String tableId, String baseId, String personal_access_token)
     {
         String endpoint = "https://api.airtable.com/v0/" + baseId + "/" + tableId + "/" + recordId;
+        HttpClient client = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
 
-        try(CloseableHttpClient client = HttpClientBuilder.create().build())
+        try
         {
             HttpDelete httpDelete = new HttpDelete(endpoint);
             httpDelete.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + personal_access_token);
 
-            CloseableHttpResponse response = client.execute(httpDelete);
+            HttpResponse response = client.execute(httpDelete);
 
             if (response.getStatusLine().getStatusCode() == 200)
             {
