@@ -9,10 +9,12 @@ import java.util.List;
 public class TaskScheduleForAntiRicons {
     public static void main(String[] args) throws Exception{
 
-
+        //Change the value of variable infoTaskSchedule to absolute path of infoTaskSchedule.json and start using
+        String infoTaskSchedule = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\infoTaskSchedule.json";
+        
         String token = config.getAccessToken();
-        String tableId = JsonTool.getAccessInfo("src/main/java/infoTaskSchedule.json").get("tableId").getAsString();
-        String groupId = JsonTool.getAccessInfo("src/main/java/infoTaskSchedule.json").get("groupId").getAsString();
+        String tableId = JsonTool.getAccessInfo(infoTaskSchedule).get("tableId").getAsString();
+        String groupId = JsonTool.getAccessInfo(infoTaskSchedule).get("groupId").getAsString();
 
         List<JsonObject> fields = GroupServiceImpl.listUsersAsJson(groupId, token);
         //token Airtable
