@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println("Request failed with response code: " + con.getResponseCode());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
     }
 
@@ -295,7 +295,7 @@ public class UserServiceImpl implements UserService {
             // Xử lý ngoại lệ FileNotFoundException ở đây
             System.out.println("File not found: " + e.getMessage());
         }catch (CsvException | IOException e ) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
 
         List<JsonObject> listUser = new ArrayList<>();
@@ -307,7 +307,7 @@ public class UserServiceImpl implements UserService {
                 try {
                     createMultipleUsersInOneRequest(listUser);
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println("Error");
                     Thread.currentThread().interrupt();
                 }
                 listUser.clear();
