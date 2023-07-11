@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static template.team_config.config.getAccessToken;
+import static template.team_config.Config.getAccessToken;
 
 public class GroupServiceImpl implements GroupService {
     private String token = getAccessToken();

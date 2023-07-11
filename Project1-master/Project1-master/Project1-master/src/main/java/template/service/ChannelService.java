@@ -8,7 +8,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import template.team_config.config;
+import template.team_config.Config;
 
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class ChannelService {
 
 
         // Set the Authorization header with the access token
-        String accessToken = config.getAccessToken();
+        String accessToken = Config.getAccessToken();
         request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
 
         // Set request body

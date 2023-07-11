@@ -2,7 +2,7 @@ import com.google.gson.JsonObject;
 import template.service.GroupServiceImpl;
 import template.service.JsonTool;
 import template.service.airtable.Table;
-import template.team_config.config;
+import template.team_config.Config;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ public class TaskScheduleForAntiRicons {
     public static void main(String[] args) throws Exception{
 
         //Change the value of variable infoTaskSchedule to absolute path of infoTaskSchedule.json and start using
-        String infoTaskSchedule = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\infoTaskSchedule.json";
+        String infoTaskSchedule = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\infoTaskSchedule.json";
         
-        String token = config.getAccessToken();
+        String token = Config.getAccessToken();
         String tableId = JsonTool.getAccessInfo(infoTaskSchedule).get("tableId").getAsString();
         String groupId = JsonTool.getAccessInfo(infoTaskSchedule).get("groupId").getAsString();
 

@@ -23,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import static template.team_config.config.getAccessToken;
+import static template.team_config.Config.getAccessToken;
 
 public class UserServiceImpl implements UserService {
     private String token = getAccessToken();

@@ -1,7 +1,6 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import template.team_config.config;
 import template.persistence.dto.Group;
 import template.persistence.dto.User;
 import template.service.*;
@@ -9,6 +8,7 @@ import template.service.*;
 import template.colorUtil.Color;
 import template.service.airtable.Table;
 
+import template.team_config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ import java.util.Scanner;
 public class CLI {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        //Change the value of configAirTable and config to absolute path of configAirTable.json and config.json respectively
-        String configAirTable = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\template\service\airtable\configAirTable.json";
-        String config = "C:\Users\admin\Downloads\Project_I-main\Project1-master\Project1-master\Project1-master\src\main\java\template\team_config\config.json";
+        //Change the value of configAirTable and Config to absolute path of configAirTable.json and Config.json respectively
+        String configAirTable = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\service\\airtable\\configAirTable.json";
+        String config = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\team_config\\Config.json";
 
 
         
@@ -207,7 +207,7 @@ public class CLI {
                 Color.print_yellow("-- Synchronize Users information in an organization to Airtable --");
 
                 // token MS
-                String token = config.getAccessToken();
+                String token = Config.getAccessToken();
 
 
                 List<JsonObject> fields = Organization.listUsersAsJson(token);
@@ -249,7 +249,7 @@ public class CLI {
                 Color.print_yellow("-- Synchronize Users information in an Team(Group) to Airtable --");
 
                 // token MS
-                String token = config.getAccessToken();
+                String token = Config.getAccessToken();
 
                 Color.print_yellow_no("Enter groupId: ");
                 String groupId = input.nextLine();
@@ -257,7 +257,7 @@ public class CLI {
                 List<JsonObject> fields = GroupServiceImpl.listUsersAsJson(groupId, token);
 
                 //token Airtable
-                JsonObject access = JsonTool.getAccessInfo(configAirTable.json).getAsJsonObject();
+                JsonObject access = JsonTool.getAccessInfo(configAirTable).getAsJsonObject();
                 String personal_access_token = access.get("personal_access_token").getAsString();
                 String baseId = access.get("baseId").getAsString();
 
