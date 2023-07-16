@@ -1,13 +1,14 @@
 # Project I from group 10 - Lập trình xây dựng chương trình quản lý dịch vụ Microsoft Team và đồng bộ dữ liệu về AirTable
-#### Information
+#### Information 
+    Add your access information to these json files
     1. Path: "src/main/java/infoTaskSchedule.json" chứa thông tin groupId (Ms Team), tableId (của AirTable) cho tác vụ lập lịch
     2. Path: "src/main/java/template/accessInfo/configAzure.json" chứa thông tin CLIENT_ID, CLIENT_SECRET, TENANT_ID, OBJECT_ID (của Microsoft graph)
     3. Path: "src/main/java/template/accessInfo/configAirTable.json" chứa thông tin baseId, personal_access_token của AirTable
     
 #### Configuration
     1. Download maven from https://maven.apache.org/download.cgi , then config this file in edit system environment variables (if you use window) to run the task schedule
-    2. Change all the path of json file in the code to your current absolute path
-###### Note: you dont need to config file config.json since this file already config
+    2. Change all the path of json file in the code to your current absolute path (For example, in CLI.java, you need to change the value of variable "configAirTable" to the absolute path of file named "configAirTable.json" or in Config.java, you need to change the value of variable "configAzure" to the absolute path of file named "configAzure.json"
+###### Note: you dont need to config file configAzure.json since this file already config
 #### Set up automatical synchronous feature
     Step 1: open "laplich.bat" file in the repository and change the path to your java.exe, and change the path to "TaskScheduleForAntiRicons" class file
     ##### You can config task schedule for 2 way
