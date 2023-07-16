@@ -1,4 +1,4 @@
-# Project I from group 10 - Lập trình xây dựng chương trình quản lý dịch vụ Microsoft Team và đồng bộ dữ liệu về AirTable
+# Project I from group 16 - Lập trình xây dựng chương trình quản lý dịch vụ Microsoft Team và đồng bộ dữ liệu về AirTable
 #### Information 
     Add your access information to these json files
     1. Path: "src/main/java/infoTaskSchedule.json" chứa thông tin groupId (Ms Team), tableId (của AirTable) cho tác vụ lập lịch
