@@ -1,6 +1,7 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import template.jsonUtil.JsonTool;
 import template.persistence.dto.Group;
 import template.persistence.dto.User;
 import template.service.*;
@@ -19,9 +20,7 @@ public class CLI {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         //Change the value of configAirTable and Config to absolute path of configAirTable.json and Config.json respectively
-        String configAirTable = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\service\\airtable\\configAirTable.json";
-        String config = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\team_config\\Config.json";
-
+        String configAirTable = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\info\\configAirTable.json";
 
         
         String general = "----------------------------------------------\n" +
@@ -50,20 +49,21 @@ public class CLI {
                 "1. Create user\n" +
                 "2. Create multiple users from csv file\n" +
                 "3. Delete user from organization\n" +
-                "4. Create Team\n" +
-                "5. Delete Team(Group)\n" +
-                "6. Create Channel\n" +
-                "7. Add user/multiple users to Team\n" +
-                "8. Get user by principal name\n" +
-                "9. Assign license for user\n" +
+                "4. Create Group\n" +
+                "5. Create Team\n" +
+                "6. Delete Team(Group)\n" +
+                "7. Create Channel\n" +
+                "8. Add user/multiple users to Team\n" +
+                "9. Get user by principal name\n" +
+                "10. Assign license for user\n" +
 
                 "--Airtable--\n" +
-                "10. Synchronize Users information in an organization to Airtable \n" +
-                "11. Synchronize Users information in a Team to Airtable\n" +
-                "12. Write to XLSX file\n" +
+                "11. Synchronize Users information in an organization to Airtable \n" +
+                "12. Synchronize Users information in a Team to Airtable\n" +
+                "13. Write to XLSX file\n" +
                 "----------------------------------------------\n" +
-                "13. Print help\n" +
-                "14. Exit";
+                "14. Print help\n" +
+                "15. Exit";
 
         while (true)
         {
@@ -115,7 +115,7 @@ public class CLI {
             }
             else if (option.equals("4"))
             {
-                Color.print_yellow("-- Create Team --");
+                Color.print_yellow("-- Create Group --");
 
                 Color.print_yellow_no("Enter displayName: ");
                 String displayName = input.nextLine();
@@ -145,6 +145,15 @@ public class CLI {
             }
             else if (option.equals("5"))
             {
+                Color.print_yellow("-- Create Team --");
+
+                Color.print_yellow_no("Enter groupId: ");
+                String groupId = input.nextLine();
+
+                groupService.createTeam(groupId);
+            }
+            else if (option.equals("6"))
+            {
                 Color.print_yellow("-- Delete Team(Group) --");
 
                 Color.print_yellow_no("Enter groupId: ");
@@ -152,7 +161,7 @@ public class CLI {
 
                 groupService.deleteTeam(groupId);
             }
-            else if (option.equals("6"))
+            else if (option.equals("7"))
             {
                 Color.print_yellow("-- Create Channel --");
 
@@ -167,7 +176,7 @@ public class CLI {
 
                 ChannelService.create(groupId, displayName, description);
             }
-            else if (option.equals("7"))
+            else if (option.equals("8"))
             {
                 Color.print_yellow("-- Add user/multiple users to Team --");
 
@@ -184,7 +193,7 @@ public class CLI {
 
                 groupService.addMemberToTeam(groupId, userId);
             }
-            else if (option.equals("8"))
+            else if (option.equals("9"))
             {
                 Color.print_yellow("-- Get user by principal name --");
 
@@ -193,7 +202,7 @@ public class CLI {
 
                 service.getUserByPrincipalName(userPrincipalName);
             }
-            else if (option.equals("9"))
+            else if (option.equals("10"))
             {
                 Color.print_yellow("-- Assign license for user --");
 
@@ -202,7 +211,7 @@ public class CLI {
 
                 service.assignLicense(userId);
             }
-            else if (option.equals("10"))
+            else if (option.equals("11"))
             {
                 Color.print_yellow("-- Synchronize Users information in an organization to Airtable --");
 
@@ -244,7 +253,7 @@ public class CLI {
                     tableObj.pullAllRecords(fields, baseId, personal_access_token);
                 }
                 }
-            else if (option.equals("11"))
+            else if (option.equals("12"))
             {
                 Color.print_yellow("-- Synchronize Users information in an Team(Group) to Airtable --");
 
@@ -288,7 +297,7 @@ public class CLI {
                     tableObj.pullAllRecords(fields, baseId, personal_access_token);
                 }
             }
-            else if (option.equals("12"))
+            else if (option.equals("13"))
             {
                 Color.print_yellow("-- Write table to XLSX file --");
 
@@ -309,11 +318,11 @@ public class CLI {
 
                 table.writeTableToXLSX(filepath, baseId, personal_access_token);
             }
-            else if (option.equals("13"))
+            else if (option.equals("14"))
             {
                 Color.print_green(general);
             }
-            else if (option.equals("14"))
+            else if (option.equals("15"))
             {
                 break;
             }
