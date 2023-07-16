@@ -1,8 +1,8 @@
 # Project I from group 10 - Lập trình xây dựng chương trình quản lý dịch vụ Microsoft Team và đồng bộ dữ liệu về AirTable
 #### Information
-    1. Path: "src/main/java/infoTaskSchedule.json" chứa thông tin groupId, tableId (của AirTable)
-    2. Path: "src/main/java/template/team_config/config.json" chứa thông tin CLIENT_ID, CLIENT_SECRET, TENANT_ID, OBJECT_ID (của Microsoft graph)
-    3. Path: "src/main/java/template/service/airtable/configAirTable.json" chứa thông tin baseId, personal_access_token của AirTable
+    1. Path: "src/main/java/infoTaskSchedule.json" chứa thông tin groupId (Ms Team), tableId (của AirTable) cho tác vụ lập lịch
+    2. Path: "src/main/java/template/accessInfo/configAzure.json" chứa thông tin CLIENT_ID, CLIENT_SECRET, TENANT_ID, OBJECT_ID (của Microsoft graph)
+    3. Path: "src/main/java/template/accessInfo/configAirTable.json" chứa thông tin baseId, personal_access_token của AirTable
     
 #### Configuration
     1. Download maven from https://maven.apache.org/download.cgi , then config this file in edit system environment variables (if you use window) to run the task schedule
