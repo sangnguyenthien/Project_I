@@ -56,14 +56,15 @@ public class CLI {
                 "8. Add user/multiple users to Team\n" +
                 "9. Get user by principal name\n" +
                 "10. Assign license for user\n" +
+                "11. List existed groupIDs\n" +
 
                 "--Airtable--\n" +
-                "11. Synchronize Users information in an organization to Airtable \n" +
-                "12. Synchronize Users information in a Team to Airtable\n" +
-                "13. Write to XLSX file\n" +
+                "12. Synchronize Users information in an organization to Airtable \n" +
+                "13. Synchronize Users information in a Team to Airtable\n" +
+                "14. Write to XLSX file\n" +
                 "----------------------------------------------\n" +
-                "14. Print help\n" +
-                "15. Exit";
+                "15. Print help\n" +
+                "16. Exit";
 
         while (true)
         {
@@ -213,6 +214,12 @@ public class CLI {
             }
             else if (option.equals("11"))
             {
+                Color.print_yellow("-- List existed groupId --");
+
+                groupService.listIDsGroup();
+            }
+            else if (option.equals("12"))
+            {
                 Color.print_yellow("-- Synchronize Users information in an organization to Airtable --");
 
                 // token MS
@@ -253,7 +260,7 @@ public class CLI {
                     tableObj.pullAllRecords(fields, baseId, personal_access_token);
                 }
                 }
-            else if (option.equals("12"))
+            else if (option.equals("13"))
             {
                 Color.print_yellow("-- Synchronize Users information in an Team(Group) to Airtable --");
 
@@ -297,7 +304,7 @@ public class CLI {
                     tableObj.pullAllRecords(fields, baseId, personal_access_token);
                 }
             }
-            else if (option.equals("13"))
+            else if (option.equals("14"))
             {
                 Color.print_yellow("-- Write table to XLSX file --");
 
@@ -318,7 +325,7 @@ public class CLI {
 
                 table.writeTableToXLSX(filepath, baseId, personal_access_token);
             }
-            else if (option.equals("14"))
+            else if (option.equals("15"))
             {
                 Color.print_green(general);
             }
