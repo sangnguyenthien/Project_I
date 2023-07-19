@@ -22,7 +22,8 @@ public class JsonTool {
         }
         catch(FileNotFoundException e)
         {
-            throw  new RuntimeException(e);
+            System.out.println("File not found");
+            return null;
         }
     }
 
