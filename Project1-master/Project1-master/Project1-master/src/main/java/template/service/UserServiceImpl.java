@@ -371,6 +371,26 @@ public class UserServiceImpl implements UserService {
             listUser.clear();
         }
     }
+    
+    public String listJoinedTeams(String userId) throws IOException, InterruptedException {
+        String graphEndpoint = "https://graph.microsoft.com/v1.0/users/" + userId + "/joinedTeams";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(graphEndpoint))
+                .header("Authorization", "Bearer " + token)
+                .build();
 
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+
+        JsonArray arrayValue = new JsonArray();
+        if (jsonObject.has("value"))
+        {
+            arrayValue = jsonObject.get("value").getAsJsonArray();
+        }
+
+        return arrayValue.toString();
+    }
 
 }
