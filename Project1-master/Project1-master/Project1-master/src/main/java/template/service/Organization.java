@@ -58,6 +58,10 @@ public class Organization {
             "    {\n" +
             "      \"name\": \"userPrincipalName\",\n" +
             "      \"type\": \"singleLineText\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"name\": \"joinedTeams\",\n" +
+            "      \"type\": \"singleLineText\"\n" +
             "    }\n" +
             "  ]\n").getAsJsonArray();
     public static List<JsonObject> listUsersAsJson(String token)
@@ -106,6 +110,13 @@ public class Organization {
                     // Update the JsonObject with the new value of "roles"
                     jsonObject.addProperty("businessPhones", rolesString);
                 }
+
+                String userId = jsonObject.get("id").getAsString();
+
+                UserServiceImpl user = new UserServiceImpl();
+                jsonObject.addProperty("joinedTeams", user.listJoinedTeams(userId));
+
+
                 result.add(jsonObject);
 
             }
@@ -113,9 +124,10 @@ public class Organization {
             return result;
 
         }
-        catch(IOException e)
+        catch(IOException | InterruptedException e)
         {
-            throw new RuntimeException(e);
+            System.out.println("Oops! We ran into some problems");
+            return null;
         }
     }
 }
