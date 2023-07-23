@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
 
 
-    public void getUser() throws IOException, InterruptedException {
+    public void getAllUsers() throws IOException, InterruptedException {
         String graphEndpoint = "https://graph.microsoft.com/v1.0/users";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(graphEndpoint))
