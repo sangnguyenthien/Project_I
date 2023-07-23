@@ -162,7 +162,7 @@ public class CLI {
                     Color.printYellowNo("Enter description: ");
                     String description = input.nextLine();
 
-                    ChannelService.create(groupId, displayName, description);
+                    ChannelService.createChannel(groupId, displayName, description);
                 } else if (option.equals("8")) {
                     Color.printYellow("-- Add user/multiple users to Team --");
 
