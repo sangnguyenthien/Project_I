@@ -302,8 +302,7 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
-    public void listIDsGroup() throws IOException, InterruptedException
-    {
+    public void listIDsGroup() throws IOException, InterruptedException {
         String accessToken = token;
 
         // Set the request headers
@@ -311,41 +310,33 @@ public class GroupServiceImpl implements GroupService {
         request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
         request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
-        try {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             // Send the request and get the response
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            CloseableHttpResponse response = httpClient.execute(request);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                // Check the response status code
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    // Get the response body as a string
+                    String responseBody = EntityUtils.toString(response.getEntity());
 
-            // Check the response status code
-            if (response.getStatusLine().getStatusCode() == 200) {
-                // Get the response body as a string
-                String responseBody = EntityUtils.toString(response.getEntity());
+                    // Parse the JSON response
+                    JSONObject responseJson = new JSONObject(responseBody);
 
-                // Parse the JSON response
-                JSONObject responseJson = new JSONObject(responseBody);
+                    // Get the array of groups from the response
+                    JSONArray groupsJson = responseJson.getJSONArray("value");
 
-                // Get the array of groups from the response
-                JSONArray groupsJson = responseJson.getJSONArray("value");
-
-                // Print the IDs of the groups
-                for (int i = 0; i < groupsJson.length(); i++) {
-                    JSONObject groupJson = groupsJson.getJSONObject(i);
-                    String groupId = groupJson.getString("id");
-                    System.out.println(groupId);
+                    // Print the IDs of the groups
+                    for (int i = 0; i < groupsJson.length(); i++) {
+                        JSONObject groupJson = groupsJson.getJSONObject(i);
+                        String groupId = groupJson.getString("id");
+                        System.out.println(groupId);
+                    }
+                } else {
+                    System.out.printf("Failed to list groups. Status code: %d, Error message: %s", response.getStatusLine().getStatusCode(), response.getEntity().getContent().toString());
                 }
-            } else {
-                System.out.printf("Failed to list groups. Status code: %d, Error message: %s", response.getStatusLine().getStatusCode(), response.getEntity().getContent().toString());
             }
-
-            // Close the response and the HttpClient
-            response.close();
-            httpClient.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             System.out.println("Failed to list groups");
         }
     }
-
 
 }

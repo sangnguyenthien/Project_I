@@ -126,6 +126,7 @@ public class Organization {
         }
         catch(IOException | InterruptedException e)
         {
+            Thread.currentThread().interrupt();
             System.out.println("Oops! We ran into some problems");
             return null;
         }

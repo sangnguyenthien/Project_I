@@ -9,7 +9,7 @@ public interface UserService {
     void createUser(User newUser) throws IOException, InterruptedException;
     void deleteUser(String id) throws IOException, InterruptedException;
     void assignLicense(String userId);
-    void createAllUsers(String path);
+    void createAllUsers(String path) throws IOException;
     void getUserByPrincipalName(String pricipalName);
 
 }

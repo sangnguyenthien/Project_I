@@ -21,7 +21,7 @@ public class CLI {
     public static void showMenu()
     {
         //Change the value of configAirTable and Config to absolute path of configAirTable.json and Config.json respectively
-        String configAirTable = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAirTable.json";
+        String configAirTable = "C:\\Users\\LamPhuss\\Downloads\\Project_I-main (1)\\Project_I-main\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAirTable.json";
 
 
         String general = "----------------------------------------------\n" +
@@ -85,7 +85,7 @@ public class CLI {
                     Color.printYellow("Enter mailNickname: ");
                     String mailNickname = input.nextLine();
 
-                    Color.printYellow("Enter userPrincipalName: ");
+                    Color.printYellow("Enter userPrincipalName (example@example.com):");
                     String userPrincipalName = input.nextLine();
 
                     Color.printYellow("Enter password: ");
@@ -308,6 +308,7 @@ public class CLI {
         }
         catch (IOException | InterruptedException e)
         {
+            Thread.currentThread().interrupt();
             System.out.println("Oops! We ran into some problems");
         }
     }
