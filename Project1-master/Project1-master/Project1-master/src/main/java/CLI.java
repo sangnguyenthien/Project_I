@@ -18,11 +18,12 @@ import java.util.Scanner;
 
 public class CLI {
 
-    public static void main(String[] args){
+    public static void showMenu()
+    {
         //Change the value of configAirTable and Config to absolute path of configAirTable.json and Config.json respectively
         String configAirTable = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAirTable.json";
 
-        
+
         String general = "----------------------------------------------\n" +
                 "            ANTI-RICONS Application\n" +
                 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣤⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀\n" +
@@ -309,6 +310,10 @@ public class CLI {
         {
             System.out.println("Oops! We ran into some problems");
         }
+    }
+
+    public static void main(String[] args){
+        showMenu();
     }
 }
 
