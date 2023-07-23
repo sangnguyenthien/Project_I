@@ -68,7 +68,7 @@ public class CLI {
                 "16. Exit";
         try {
             while (true) {
-                Color.print_green(general);
+                Color.printGreen(general);
                 Scanner input = new Scanner(System.in);
                 String option = input.nextLine();
 
@@ -77,53 +77,53 @@ public class CLI {
 
                 if (option.equals("1")) {
 
-                    Color.print_yellow("-- Create user -- ");
+                    Color.printYellow("-- Create user -- ");
 
-                    Color.print_yellow("Enter displayName: ");
+                    Color.printYellow("Enter displayName: ");
                     String displayName = input.nextLine();
 
-                    Color.print_yellow("Enter mailNickname: ");
+                    Color.printYellow("Enter mailNickname: ");
                     String mailNickname = input.nextLine();
 
-                    Color.print_yellow("Enter userPrincipalName: ");
+                    Color.printYellow("Enter userPrincipalName: ");
                     String userPrincipalName = input.nextLine();
 
-                    Color.print_yellow("Enter password: ");
+                    Color.printYellow("Enter password: ");
                     String password = input.nextLine();
 
                     User user = new User(displayName, mailNickname, userPrincipalName, password);
                     service.createUser(user);
                 } else if (option.equals("2")) {
 
-                    Color.print_yellow("-- Create multiple users from csv file --");
+                    Color.printYellow("-- Create multiple users from csv file --");
 
-                    Color.print_yellow_no("Enter filepath: ");
+                    Color.printYellowNo("Enter filepath: ");
                     String path = input.nextLine();
 
                     service.createAllUsers(path);
                 } else if (option.equals("3")) {
-                    Color.print_yellow("-- Delete user from organization --");
+                    Color.printYellow("-- Delete user from organization --");
 
-                    Color.print_yellow_no("Enter userId: ");
+                    Color.printYellowNo("Enter userId: ");
                     String userId = input.nextLine();
 
                     service.deleteUser(userId);
                 } else if (option.equals("4")) {
-                    Color.print_yellow("-- Create Group --");
+                    Color.printYellow("-- Create Group --");
 
-                    Color.print_yellow_no("Enter displayName: ");
+                    Color.printYellowNo("Enter displayName: ");
                     String displayName = input.nextLine();
 
-                    Color.print_yellow_no("Enter description: ");
+                    Color.printYellowNo("Enter description: ");
                     String description = input.nextLine();
 
-                    Color.print_yellow_no("Enter mailNickname: ");
+                    Color.printYellowNo("Enter mailNickname: ");
                     String mailNick = input.nextLine();
 
-                    Color.print_yellow_no("Enter ownerId: ");
+                    Color.printYellowNo("Enter ownerId: ");
                     String ownerId = input.nextLine();
 
-                    Color.print_yellow_no("Enter userIds: ");
+                    Color.printYellowNo("Enter userIds: ");
                     List<String> userId = new ArrayList<>();
                     String line = input.nextLine();
                     while (!line.isEmpty()) {
@@ -137,39 +137,39 @@ public class CLI {
 
                     groupService.createTeam(groupId);
                 } else if (option.equals("5")) {
-                    Color.print_yellow("-- Create Team --");
+                    Color.printYellow("-- Create Team --");
 
-                    Color.print_yellow_no("Enter groupId: ");
+                    Color.printYellowNo("Enter groupId: ");
                     String groupId = input.nextLine();
 
                     groupService.createTeam(groupId);
                 } else if (option.equals("6")) {
-                    Color.print_yellow("-- Delete Team(Group) --");
+                    Color.printYellow("-- Delete Team(Group) --");
 
-                    Color.print_yellow_no("Enter groupId: ");
+                    Color.printYellowNo("Enter groupId: ");
                     String groupId = input.nextLine();
 
                     groupService.deleteTeam(groupId);
                 } else if (option.equals("7")) {
-                    Color.print_yellow("-- Create Channel --");
+                    Color.printYellow("-- Create Channel --");
 
-                    Color.print_yellow_no("Enter groupId: ");
+                    Color.printYellowNo("Enter groupId: ");
                     String groupId = input.nextLine();
 
-                    Color.print_yellow_no("Enter displayName: ");
+                    Color.printYellowNo("Enter displayName: ");
                     String displayName = input.nextLine();
 
-                    Color.print_yellow_no("Enter description: ");
+                    Color.printYellowNo("Enter description: ");
                     String description = input.nextLine();
 
                     ChannelService.create(groupId, displayName, description);
                 } else if (option.equals("8")) {
-                    Color.print_yellow("-- Add user/multiple users to Team --");
+                    Color.printYellow("-- Add user/multiple users to Team --");
 
-                    Color.print_yellow_no("Enter groupId: ");
+                    Color.printYellowNo("Enter groupId: ");
                     String groupId = input.nextLine();
 
-                    Color.print_yellow_no("Enter userIds: ");
+                    Color.printYellowNo("Enter userIds: ");
                     List<String> userId = new ArrayList<>();
                     String line = input.nextLine();
                     while (!line.isEmpty()) {
@@ -179,25 +179,25 @@ public class CLI {
 
                     groupService.addMemberToTeam(groupId, userId);
                 } else if (option.equals("9")) {
-                    Color.print_yellow("-- Get user by principal name --");
+                    Color.printYellow("-- Get user by principal name --");
 
-                    Color.print_yellow_no("Enter userPrincipalName (example@example.com): ");
+                    Color.printYellowNo("Enter userPrincipalName (example@example.com): ");
                     String userPrincipalName = input.nextLine();
 
                     service.getUserByPrincipalName(userPrincipalName);
                 } else if (option.equals("10")) {
-                    Color.print_yellow("-- Assign license for user --");
+                    Color.printYellow("-- Assign license for user --");
 
-                    Color.print_yellow_no("Enter userId: ");
+                    Color.printYellowNo("Enter userId: ");
                     String userId = input.nextLine();
 
                     service.assignLicense(userId);
                 } else if (option.equals("11")) {
-                    Color.print_yellow("-- List existed groupId --");
+                    Color.printYellow("-- List existed groupId --");
 
                     groupService.listIDsGroup();
                 } else if (option.equals("12")) {
-                    Color.print_yellow("-- Synchronize Users information in an organization to Airtable --");
+                    Color.printYellow("-- Synchronize Users information in an organization to Airtable --");
 
                     // token MS
                     String token = Config.getAccessToken();
@@ -210,10 +210,10 @@ public class CLI {
                     String personal_access_token = access.get("personal_access_token").getAsString();
                     String baseId = access.get("baseId").getAsString();
 
-                    Color.print_yellow("Do you want to synchronize to an existed table (Press 1) or create new table and sync (Press 2)?");
+                    Color.printYellow("Do you want to synchronize to an existed table (Press 1) or create new table and sync (Press 2)?");
                     String choose = input.nextLine();
                     if (choose.equals("1")) {
-                        Color.print_yellow_no("Enter tableId: ");
+                        Color.printYellowNo("Enter tableId: ");
                         String tableId = input.nextLine();
 
                         JsonObject fieldTable = Table.getTable(tableId, baseId, personal_access_token);
@@ -221,7 +221,7 @@ public class CLI {
                         Table table = new Table(fieldTable, baseId, personal_access_token);
                         table.pullAllRecords(fields, baseId, personal_access_token);
                     } else if (choose.equals("2")) {
-                        Color.print_yellow_no("Enter table name: ");
+                        Color.printYellowNo("Enter table name: ");
                         String name = input.nextLine();
 
                         JsonArray fieldSetting = Organization.tableSetting;
@@ -234,12 +234,12 @@ public class CLI {
                         tableObj.pullAllRecords(fields, baseId, personal_access_token);
                     }
                 } else if (option.equals("13")) {
-                    Color.print_yellow("-- Synchronize Users information in an Team(Group) to Airtable --");
+                    Color.printYellow("-- Synchronize Users information in an Team(Group) to Airtable --");
 
                     // token MS
                     String token = Config.getAccessToken();
 
-                    Color.print_yellow_no("Enter groupId: ");
+                    Color.printYellowNo("Enter groupId: ");
                     String groupId = input.nextLine();
 
                     List<JsonObject> fields = GroupServiceImpl.listUsersAsJson(groupId, token);
@@ -249,10 +249,10 @@ public class CLI {
                     String personal_access_token = access.get("personal_access_token").getAsString();
                     String baseId = access.get("baseId").getAsString();
 
-                    Color.print_yellow("Do you want to synchronize to an existed table (Press 1) or create new table and sync (Press 2)?");
+                    Color.printYellow("Do you want to synchronize to an existed table (Press 1) or create new table and sync (Press 2)?");
                     String choose = input.nextLine();
                     if (choose.equals("1")) {
-                        Color.print_yellow_no("Enter tableId: ");
+                        Color.printYellowNo("Enter tableId: ");
                         String tableId = input.nextLine();
 
                         JsonObject fieldTable = Table.getTable(tableId, baseId, personal_access_token);
@@ -260,7 +260,7 @@ public class CLI {
                         Table table = new Table(fieldTable, baseId, personal_access_token);
                         table.pullAllRecords(fields, baseId, personal_access_token);
                     } else if (choose.equals("2")) {
-                        Color.print_yellow_no("Enter table name: ");
+                        Color.printYellowNo("Enter table name: ");
                         String name = input.nextLine();
 
                         JsonArray fieldSetting = GroupServiceImpl.tableSetting;
@@ -273,17 +273,17 @@ public class CLI {
                         tableObj.pullAllRecords(fields, baseId, personal_access_token);
                     }
                 } else if (option.equals("14")) {
-                    Color.print_yellow("-- Write table to XLSX file --");
+                    Color.printYellow("-- Write table to XLSX file --");
 
                     //token Airtable
                     JsonObject access = JsonTool.getAccessInfo(configAirTable).getAsJsonObject();
                     String personal_access_token = access.get("personal_access_token").getAsString();
                     String baseId = access.get("baseId").getAsString();
 
-                    Color.print_yellow_no("Enter tableId: ");
+                    Color.printYellowNo("Enter tableId: ");
                     String tableId = input.nextLine();
 
-                    Color.print_yellow_no("Enter filepath/filename: ");
+                    Color.printYellowNo("Enter filepath/filename: ");
                     String filepath = input.nextLine();
 
                     JsonObject fieldTable = Table.getTable(tableId, baseId, personal_access_token);
@@ -292,14 +292,14 @@ public class CLI {
 
                     table.writeTableToXLSX(filepath, baseId, personal_access_token);
                 } else if (option.equals("15")) {
-                    Color.print_green(general);
+                    Color.printGreen(general);
                 } else if (option.equals("16")) {
                     break;
                 } else {
                     continue;
                 }
 
-                Color.print_green("Do you want to continue using ANTI-RICONS application? Y/N");
+                Color.printGreen("Do you want to continue using ANTI-RICONS application? Y/N");
                 String choosing = input.nextLine();
                 if (!choosing.equals("Y")) {
                     break;
