@@ -15,7 +15,7 @@ import java.io.IOException;
 
 
 public class ChannelService {
-    public static void create(String teamId, String displayName, String description) throws IOException, InterruptedException
+    public static void createChannel(String teamId, String displayName, String description) throws IOException, InterruptedException
     {
         //String teamId = "7e8dcfe0-1fd3-4226-aeb0-63e1cc394c39";
         String membershipType = "standard";
