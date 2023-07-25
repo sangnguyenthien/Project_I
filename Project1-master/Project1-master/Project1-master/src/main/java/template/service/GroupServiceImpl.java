@@ -440,6 +440,10 @@ public class GroupServiceImpl implements GroupService {
                 return "https://teams.microsoft.com/l/team/" + URLEncoder.encode(channelId, StandardCharsets.UTF_8) + "/conversations?groupId=" + groupId +"&tenantId=" + TENANT_ID;
             }
         }
+        else
+        {
+            return "Invalid groupId";
+        }
         return "Cannot create link to team";
     }
 
