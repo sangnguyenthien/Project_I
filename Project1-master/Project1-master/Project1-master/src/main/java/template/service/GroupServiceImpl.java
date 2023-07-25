@@ -31,6 +31,7 @@ import static template.team_config.Config.configAzure;
 import static template.team_config.Config.getAccessToken;
 
 public class GroupServiceImpl implements GroupService {
+    private String configAzure = Config.configAzure;
     private String token = getAccessToken();
     public static final JsonArray tableSetting = JsonParser.parseString("[\n" +
             "  {\n" +
