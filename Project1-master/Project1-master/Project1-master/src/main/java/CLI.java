@@ -239,8 +239,14 @@ public class CLI {
 
                         JsonObject fieldTable = Table.getTable(tableId, baseId, personal_access_token);
 
-                        Table table = new Table(fieldTable, baseId, personal_access_token);
-                        table.pullAllRecords(fields, baseId, personal_access_token);
+                        if (fieldTable != null) {
+                            Table table = new Table(fieldTable, baseId, personal_access_token);
+                            table.pullAllRecords(fields, baseId, personal_access_token);
+                        }
+                        else
+                        {
+                            Color.printYellow("Error: Invalid tableId");
+                        }
                     } else if (choose.equals("2")) {
                         Color.printYellowNo("Enter table name: ");
                         String name = input.nextLine();
@@ -290,8 +296,14 @@ public class CLI {
 
                         JsonObject table = JsonParser.parseString(response).getAsJsonObject();
 
-                        Table tableObj = new Table(table, baseId, personal_access_token);
-                        tableObj.pullAllRecords(fields, baseId, personal_access_token);
+                        if (fieldTable != null) {
+                            Table table = new Table(fieldTable, baseId, personal_access_token);
+                            table.pullAllRecords(fields, baseId, personal_access_token);
+                        }
+                        else
+                        {
+                            Color.printYellow("Error: Invalid tableId");
+                        }
                     }
                 } else if (option.equals("16")) {
                     Color.printYellow("-- Write table to XLSX file --");
@@ -308,10 +320,16 @@ public class CLI {
                     String filepath = input.nextLine();
 
                     JsonObject fieldTable = Table.getTable(tableId, baseId, personal_access_token);
+                
+                    if (fieldTable != null) {
+                        Table table = new Table(fieldTable, baseId, personal_access_token);
 
-                    Table table = new Table(fieldTable, baseId, personal_access_token);
-
-                    table.writeTableToXLSX(filepath, baseId, personal_access_token);
+                        table.writeTableToXLSX(filepath, baseId, personal_access_token);
+                    }
+                    else
+                    {
+                        Color.printYellow("Error: Invalid tableId");
+                    }
                 } else if (option.equals("17")) {
                     Color.printGreen(general);
                 } else if (option.equals("18")) {
