@@ -280,6 +280,13 @@ public class Table{
     }
     public void writeTableToXLSX(String filename, String baseId, String token)
     {
+        if (!filename.contains(".xlsx") || !filename.contains(".csv"))
+        {
+            Color.printYellow("Invalid path, your path should be ended with .xlsx or .csv");
+            Color.printYellow("Cannot write table");
+            return;
+        }
+
         this.syncRecord(baseId, token);
         try{
             XSSFWorkbook workbook = new XSSFWorkbook();
