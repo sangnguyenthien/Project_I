@@ -83,10 +83,8 @@ public class ChannelService {
             httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
             HttpResponse response = client.execute(httpGet);
             if (response.getStatusLine().getStatusCode() != 200) {
-                //System.out.println("Error: Could not list tables");
                 return null;
             }
-            //System.out.println("Listed tables");
             HttpEntity entity = response.getEntity();
             String responseString = EntityUtils.toString(entity);
             return responseString;
