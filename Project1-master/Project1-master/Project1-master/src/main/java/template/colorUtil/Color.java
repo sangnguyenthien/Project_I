@@ -26,4 +26,15 @@ public class Color {
     {
         System.out.println(Ansi.ansi().fgBlue().a(text).reset());
     }
+
+    public static void printMagenta(String text)
+    {
+        System.out.println(Ansi.ansi().fgMagenta().a(text).reset());
+    }
+
+    public static void printCyan(String text)
+    {
+        System.out.println(Ansi.ansi().fgCyan().a(text).reset());
+    }
+    
 }
