@@ -164,7 +164,7 @@ public class Table{
     {
         dropRecord(fields, baseId, personal_access_token);
 
-        int i = 1;
+        int index = 1;
         int full = fields.size();
         for (JsonObject field : fields)
         {
@@ -173,8 +173,8 @@ public class Table{
                 //print Cannot pull record: user ID in table name
                 return false;
             }
-            System.out.print("\r" + i + "/" + full);
-            i += 1;
+            System.out.print("\r" + index + "/" + full);
+            index += 1;
         }
         System.out.print("\n");
         //print Pulled all records in table name
