@@ -7,7 +7,7 @@
     
 #### Configuration
     1. Download maven from https://maven.apache.org/download.cgi , then config this file in edit system environment variables (if you use window) to run the task schedule
-    2. Change all the path of json file in the code to your current absolute path (For example, in CLI.java, you need to change the value of variable "configAirTable" to the absolute path of file named "configAirTable.json" or in Config.java, you need to change the value of variable "configAzure" to the absolute path of file named "configAzure.json"
+    2. Change all the path of json file in the code to your current absolute path (In Config.java, you need to change the value of variable "configAirTable" to the absolute path of file named "configAirTable.json", the value of variable "configAzure" to the absolute path of file named "configAzure.json")
 ###### Note: you dont need to config file configAzure.json since this file already config
 #### Set up automatical synchronous feature
     Step 1: open "laplich.bat" file in the repository and change the path to your java.exe, and change the path to "TaskScheduleForAntiRicons" class file
