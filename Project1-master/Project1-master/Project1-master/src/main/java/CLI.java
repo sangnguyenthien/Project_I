@@ -215,7 +215,8 @@ public class CLI {
 
                     String linkToTeam = groupService.createLinkToTeam(groupId);
 
-                    Color.printBlue((linkToTeam.equals("Cannot create link to team")) ? linkToTeam : "Link to team is: " + linkToTeam );
+                    Color.printBlue((linkToTeam.equals("Cannot create link to team") || linkToTeam.equals("Invalid groupId"))
+                            ? linkToTeam : "Link to team is: " + linkToTeam );
                 }else if (option.equals("14")) {
                     Color.printYellow("-- Synchronize Users information in an organization to Airtable --");
 
