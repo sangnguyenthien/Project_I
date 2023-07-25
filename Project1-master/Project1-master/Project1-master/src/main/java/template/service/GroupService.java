@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface GroupService {
-    String createGroup(Group newGroup, String ownerId , List<String> userId);
+    void createGroup(Group newGroup, String ownerId , List<String> userId);
     void createTeam(String groupId);
     void deleteTeam(String groupId);
     void addMemberToTeam(String groupId,List<String> memberIds);

@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import template.colorUtil.Color;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -162,8 +163,8 @@ public class Table{
     public boolean pullAllRecords(List<JsonObject> fields, String baseId, String personal_access_token)
     {
         dropRecord(fields, baseId, personal_access_token);
-        
-        int index = 1;
+
+        int i = 1;
         int full = fields.size();
         for (JsonObject field : fields)
         {
@@ -172,11 +173,12 @@ public class Table{
                 //print Cannot pull record: user ID in table name
                 return false;
             }
-            System.out.print("\r" + index + "/" + full);
-            index += 1;
+            System.out.print("\r" + i + "/" + full);
+            i += 1;
         }
         System.out.print("\n");
         //print Pulled all records in table name
+
         System.out.println("Pulled all records in the table: " + this.name);
         return true;
     }
@@ -193,6 +195,7 @@ public class Table{
                 {
                     break;
                 }
+
                 if (record.getIdField().equals(field.get("id").getAsString()))
                 {
                     isExist = true;
@@ -260,10 +263,10 @@ public class Table{
 
             HttpResponse response = httpClient.execute(httpPost);
             if (response.getStatusLine().getStatusCode() != 200) {
-                System.out.println("Error: Could not create table: " + name);
+                Color.printYellow("Error: Could not create table: " + name);
                 return null;
             }
-            System.out.println("Created table: " + name);
+            Color.printBlue("Created table: " + name);
             return EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
             System.out.println("Error: Could not create table: " + name + ". Message: " + e.getMessage());
@@ -288,14 +291,14 @@ public class Table{
     {
         if (!filename.contains(".xlsx") && !filename.contains(".csv"))
         {
-            Color.printYellow("Invalid path, your path should be ended with .xlsx or .csv");
+            Color.printYellow("Invalid path, your path must be ended with .xlsx or .csv");
             Color.printYellow("Cannot write table");
             return;
         }
 
         this.syncRecord(baseId, token);
-        try{
-            XSSFWorkbook workbook = new XSSFWorkbook();
+        try(XSSFWorkbook workbook = new XSSFWorkbook()){
+            //XSSFWorkbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet(name);
 
             // Create the header row
@@ -330,7 +333,7 @@ public class Table{
             // Write the workbook to a file
             FileOutputStream outputStream = new FileOutputStream(filename);
             workbook.write(outputStream);
-            System.out.println("Wrote table: " + name + " to file: " + filename);
+            Color.printBlue("Wrote table: " + name + " to file: " + filename);
         }
         catch(IOException e)
         {

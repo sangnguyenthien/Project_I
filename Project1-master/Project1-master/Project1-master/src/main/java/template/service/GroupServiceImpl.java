@@ -14,10 +14,11 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import template.colorUtil.Color;
 import template.jsonUtil.JsonTool;
 import template.persistence.dto.Group;
-import template.team_config.Config;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,10 +27,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static template.team_config.Config.configAzure;
 import static template.team_config.Config.getAccessToken;
 
 public class GroupServiceImpl implements GroupService {
-    private String configAzure = Config.configAzure;
     private String token = getAccessToken();
     public static final JsonArray tableSetting = JsonParser.parseString("[\n" +
             "  {\n" +
@@ -71,62 +72,49 @@ public class GroupServiceImpl implements GroupService {
         // TODO document why this constructor is empty
     }
 
-    public String createGroup(Group newGroup, String ownerId, List<String> userId) {
-        String groupId = null;
+    public void createGroup(Group newGroup, String ownerId, List<String> userId) {
         String requestUrl = "https://graph.microsoft.com/v1.0/groups";
-        String requestBody = "{\n" +
-                "  \"description\": \"" + newGroup.getDescription() + "\",\n" +
-                "  \"displayName\": \"" + newGroup.getDisplayName() + "\",\n" +
-                "  \"groupTypes\": [],\n" +
-                "  \"mailEnabled\": false,\n" +
-                "  \"mailNickname\": \"" + newGroup.getMailNickname() + "\",\n" +
-                "  \"securityEnabled\": true,\n" +
-                "  \"owners@odata.bind\": [\n" +
-                "    \"https://graph.microsoft.com/v1.0/users/" + ownerId + "\"\n" +
-                "  ],\n" +
-                "  \"members@odata.bind\": [\n";
-        for (int i = 0; i < userId.size(); i++) {
-            requestBody += "    \"https://graph.microsoft.com/v1.0/users/" + userId.get(i) + "\"";
+        String var10000 = newGroup.getDescription();
+        String requestBody = "{\n  \"description\": \"" + var10000 + "\",\n  \"displayName\": \"" + newGroup.getDisplayName() + "\",\n  \"groupTypes\": [],\n  \"mailEnabled\": false,\n  \"mailNickname\": \"" + newGroup.getMailNickname() + "\",\n  \"securityEnabled\": true,\n  \"owners@odata.bind\": [\n    \"https://graph.microsoft.com/v1.0/users/" + ownerId + "\"\n  ],\n  \"members@odata.bind\": [\n";
+
+        for (int i = 0; i < userId.size(); ++i) {
+            requestBody = requestBody + "    \"https://graph.microsoft.com/v1.0/users/" + (String) userId.get(i) + "\"";
             if (i != userId.size() - 1) {
-                requestBody += ",";
+                requestBody = requestBody + ",";
             }
-            requestBody += "\n";
+
+            requestBody = requestBody + "\n";
         }
-        requestBody += "  ]\n" +
-                "}";
+
+        requestBody = requestBody + "  ]\n}";
+
         try {
-            // Create a new HttpClient object
             HttpClient httpClient = HttpClientBuilder.create().build();
-            // Create a new HttpPost object
             HttpPost httpPost = new HttpPost(requestUrl);
-            // Set the HTTP request headers
-            httpPost.addHeader("Authorization", "Bearer " + token);
+            httpPost.addHeader("Authorization", "Bearer " + this.token);
             httpPost.addHeader("Content-Type", "application/json");
-            // Set the HTTP request body
             httpPost.setEntity(new StringEntity(requestBody));
-            // Execute the HTTP request
             HttpResponse response = httpClient.execute(httpPost);
-            // Read the HTTP response body
-            Gson gson = new GsonBuilder().create();
+            Gson gson = (new GsonBuilder()).create();
             HttpEntity entity = response.getEntity();
             String responseBody = EntityUtils.toString(entity);
             if (response.getStatusLine().getStatusCode() >= 400) {
-                // Parse the JSON string
-                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
-                // Get the value of the "message" property
+                JsonObject jsonObject = (JsonObject) gson.fromJson(responseBody, JsonObject.class);
                 String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
-                // Print the error message
-                System.out.println("Error: " + message);
+                if (message.contains("does not exist or one of its queried reference-property objects are not present")) {
+                    Color.printYellow("Error: ownerID or usersID not exist");
+                    Color.printYellow(message);
+                } else {
+                    Color.printYellow("Error: " + message);
+                }
             } else {
-                System.out.println("Create group success");
-                System.out.println(responseBody);
-                JSONObject json = new JSONObject(responseBody);
-                groupId = json.getString("id");
+                Color.printBlue("Create group success");
+                Color.printBlue(responseBody);
             }
-        } catch (IOException e) {
-            System.out.println("Error");
+        } catch (IOException var14) {
+            System.out.println("Exception error: "+var14);
         }
-        return groupId;
+
     }
 
     public void createTeam(String groupId) {
@@ -158,14 +146,28 @@ public class GroupServiceImpl implements GroupService {
             if (response.getStatusLine().getStatusCode() >= 400) {
                 JSONObject json = new JSONObject(responseBody);
                 JSONObject errorJson = json.getJSONObject("error");
-                String innerErrorMessage = errorJson.getJSONObject("innerError").getString("message");
-                System.out.println(innerErrorMessage);
+                //String innerErrorMessage = errorJson.getJSONObject("innerError").getString("message");
+                try {
+                    String innerErrorMessage = errorJson.getJSONObject("innerError").getString("message");
+                    if (innerErrorMessage.contains("groupId needs to be a valid GUID")) {
+                        Color.printYellow("Wrong groupID format");
+                    } else if (innerErrorMessage.contains("The group is already provisioned")) {
+                        Color.printYellow("The group is already provisioned");
+                    } else {
+                        Color.printYellow("The groupID is not found");
+                    }
+                } catch (JSONException e) {
+                    // Xử lý ngoại lệ ở đây (ví dụ: in ra thông báo lỗi)
+                    System.out.println("Exception error: "+e);
+                    System.out.println("Maybe this error cause by wrong groupID format");
+                }
+
             } else {
-                System.out.println("Create team success");
-                System.out.println(responseBody);
+                Color.printBlue("Create team success");
+                Color.printBlue(responseBody);
             }
         } catch (IOException e) {
-            System.out.println("Error");
+            System.out.println("Exception error:" + e);
         }
     }
 
@@ -176,7 +178,14 @@ public class GroupServiceImpl implements GroupService {
             // Create a new HttpClient object
             HttpClient httpClient = HttpClientBuilder.create().build();
             // Create a new HttpDelete object
-            HttpDelete httpDelete = new HttpDelete(requestUrl);
+            HttpDelete httpDelete;
+            try {
+                httpDelete = new HttpDelete(requestUrl);
+            } catch (IllegalArgumentException e) {
+                Color.printYellow("Invalid URL: " + e.getMessage());
+                return;
+            }
+
             // Set the HTTP request headers
             httpDelete.addHeader("Authorization", "Bearer " + token);
             // Execute the HTTP request
@@ -189,30 +198,35 @@ public class GroupServiceImpl implements GroupService {
                 String responseBody = EntityUtils.toString(entity);
                 // Parse the JSON string
                 JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
-                if (jsonObject.getAsJsonObject("error").get("code").getAsString().equals("Request_ResourceNotFound")) {
-                    System.out.println("Group does not exist");
-                }
                 // Get the value of the "message" property
                 String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
-                // Print the error message
-                System.out.println("Error: " + message);
+                if (message.contains("Invalid object identifier")) {
+                    Color.printYellow("Wrong groupID format");
+                } else if (message.equals("Request_ResourceNotFound")) {
+                    Color.printYellow("Group does not exist");
+                    Color.printYellow("Error: " + message);
+                } else {
+                    // Get the value of the "message" property
+                    //String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
+                    // Print the error message
+                    Color.printYellow("Error: " + message);
+                }
             } else {
-                System.out.println("Delete team success");
+                Color.printBlue("Delete team success");
 
             }
         } catch (IOException e) {
-            System.out.println("Error");
+            System.out.println("Exception error: " + e);
         }
     }
 
     public void addMemberToTeam(String groupId, List<String> userIds) {
         String requestUrl = "https://graph.microsoft.com/v1.0/groups/" + groupId;
-        List<String> memberIds = List.of("3eb3c149-d420-4fb3-a00a-f46217a15920", "5d22e230-ac9a-4d26-9ed8-ebc401454827");
 
-        // Build the request body JSON string
+
         StringBuilder membersJson = new StringBuilder("\"members@odata.bind\": [");
-        for (String memberId : memberIds) {
-            membersJson.append("\"https://graph.microsoft.com/v1.0/directoryObjects/").append(memberId).append("\",");
+        for (String userId : userIds) {
+            membersJson.append("\"https://graph.microsoft.com/v1.0/directoryObjects/").append(userId).append("\",");
         }
         membersJson.deleteCharAt(membersJson.length() - 1);
         membersJson.append("]");
@@ -241,12 +255,24 @@ public class GroupServiceImpl implements GroupService {
                 // Get the value of the "message" property
                 String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
                 // Print the error message
-                System.out.println("Error: " + message);
+                if(message.contains("Invalid object identifier")){
+                    Color.printYellow("Wrong groupID format");
+                }
+                else if (message.contains("does not exist or one of its queried reference-property objects are not present")){
+                    Color.printYellow("Group not found");
+                }
+                else {
+                    Color.printYellow("Error: " + message);
+                    Color.printYellow("(Maybe because users are already added or wrong users ID format)");
+                }
+
+                //System.out.println(response.getStatusLine().getStatusCode());
+                //System.out.println(jsonObject.getAsJsonObject("error").toString());
             } else {
-                System.out.println("Update group members success");
+                Color.printBlue("Update group members success");
             }
         } catch (IOException e) {
-            System.out.println("Error");
+            System.out.println("Exception error: " + e);
         }
     }
 
@@ -262,7 +288,7 @@ public class GroupServiceImpl implements GroupService {
 
             HttpResponse response = httpClient.execute(httpGet);
             if (response.getStatusLine().getStatusCode() != 200) {
-                System.out.println("Cannot list users of Team has id: " + group_id);
+                Color.printYellow("Cannot list users of Team has id: " + group_id);
                 return null;
             }
 
@@ -341,10 +367,9 @@ public class GroupServiceImpl implements GroupService {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Failed to list groups");
+            System.out.println("Exception error :Failed to list groups");
         }
     }
-
     public List<String[]> listIDsTeam() throws UnsupportedEncodingException {
         // Set the request headers
         HttpGet request = new HttpGet("https://graph.microsoft.com/v1.0/groups?$filter=" +
@@ -442,9 +467,10 @@ public class GroupServiceImpl implements GroupService {
         }
         else
         {
-            return "Invalid groupId";
+            return "Group not found";
         }
-        return "Cannot create link to team";
+        return "Invalid group ID";
     }
+
 
 }

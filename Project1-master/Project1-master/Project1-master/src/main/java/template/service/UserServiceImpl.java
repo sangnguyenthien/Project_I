@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.json.JSONObject;
+import template.colorUtil.Color;
 import template.persistence.dto.User;
 
 import java.io.*;
@@ -34,32 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-    public void getAllUsers() throws IOException, InterruptedException {
-        String graphEndpoint = "https://graph.microsoft.com/v1.0/users";
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(graphEndpoint))
-                .header("Authorization", "Bearer " + token)
-                .build();
-
-        HttpClient client = HttpClient.newBuilder().build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        Gson gson = new Gson();
-        Map<String, Object> map = gson.fromJson(response.body(), Map.class);
-        List<Map<String, Object>> valueList = (List<Map<String, Object>>) map.get("value");
-        int count = 1;
-        for (Map<String, Object> valueMap : valueList) {
-            System.out.println(count);
-            count += 1;
-            for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
-                String key = entry.getKey();
-                Object val = entry.getValue();
-                System.out.println(key + ": " + val);
-            }
-        }
-    }
-
-    public void getUserByPrincipalName(String principalName){
+    public void getUserByPrincipalName(String principalName) {
         String graphEndpoint = String.format("https://graph.microsoft.com/v1.0/users/%s", principalName);
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(graphEndpoint).openConnection();
@@ -67,7 +43,7 @@ public class UserServiceImpl implements UserService {
             con.setRequestProperty("Authorization", "Bearer " + token);
             con.setRequestProperty("Accept", "application/json");
             int responseCode = con.getResponseCode();
-            System.out.println(responseCode);
+            //System.out.println(responseCode);
             if (responseCode == 200) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String response = reader.readLine();
@@ -81,14 +57,16 @@ public class UserServiceImpl implements UserService {
                 }
 
                 String resultString = sb.toString();
-                System.out.println(resultString);
+                Color.printBlue(resultString);
             } else if (con.getResponseCode() == 404) {
-                System.out.println("User not found");
-            } else {
-                System.out.println("Request failed with response code: " + con.getResponseCode());
+                Color.printYellow("User not found or wrong userPrincipalName format ,please enter userPrincipalName refer to your organization");
+            } else if (con.getResponseCode() == 400) {
+                Color.printYellow("Invalid character appear in userPrincipalName");
+                //System.out.println("Request failed with response code: " + con.getResponseCode());
             }
+
         } catch (IOException e) {
-            System.out.println("Error");
+            System.out.println("Exception error: " + e);
         }
     }
 
@@ -131,11 +109,11 @@ public class UserServiceImpl implements UserService {
             // Get the value of the "message" property
             String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
             // Print the error message
-            System.out.println("Error: " + message);
+            Color.printYellow("Error: " + message);
         } else {
             in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            System.out.println("Create user success");
-            System.out.println(in.readLine());
+            Color.printBlue("Create user success");
+            Color.printBlue(in.readLine());
         }
 
         in.close();
@@ -159,13 +137,14 @@ public class UserServiceImpl implements UserService {
         int responseCode = con.getResponseCode();
         if (responseCode >= 200 && responseCode < 300) {
             // User deleted successfully
-            System.out.println("User deleted successfully.");
+            Color.printBlue("User deleted successfully.");
         } else {
             // Handle the error response
-            System.out.println("Error deleting user: " + con.getResponseMessage());
+            Color.printYellow("Error deleting user: " + con.getResponseMessage());
         }
 
     }
+
     public static void createMultipleUsersInOneRequest(List<JsonObject> listUser) throws IOException, InterruptedException {
         try (FileWriter writer = new FileWriter("diary.txt", true)) {
 
@@ -254,11 +233,11 @@ public class UserServiceImpl implements UserService {
                 }
             }
             in.close();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error writing to diary.txt: " + e.getMessage());
         }
     }
+
     public void createAllUsers(String path) throws IOException {
         File file = new File("diary.txt");
         boolean fileExists = file.exists();
@@ -266,12 +245,12 @@ public class UserServiceImpl implements UserService {
             try {
                 fileExists = file.createNewFile();
                 if (fileExists) {
-                    System.out.println("File diary.txt created successfully.");
+                    Color.printBlue("File diary.txt created successfully.");
                 } else {
-                    System.out.println("Failed to create file diary.txt.");
+                    Color.printYellow("Failed to create file diary.txt.");
                 }
             } catch (IOException e) {
-                System.out.println("Error creating file diary.txt: " + e.getMessage());
+                System.out.println("Exception error creating file diary.txt: " + e.getMessage());
             }
         }
 
@@ -303,13 +282,13 @@ public class UserServiceImpl implements UserService {
                 listAllUser.add(user);
             }
         } catch (IOException | CsvException var11) {
-            System.out.println("File not found: " + var11.getMessage());
+            Color.printYellow("File not found ");
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    System.out.println("Error" + e);
+                    System.out.println("Exception error: " + e);
                 }
             }
             List<JsonObject> listUser = new ArrayList();
@@ -324,9 +303,9 @@ public class UserServiceImpl implements UserService {
                         try {
                             createMultipleUsersInOneRequest(listUser);
                             successfulCreations += listUser.size();
-                            System.out.println(successfulCreations + " users created successfully!");
+                            Color.printBlue(successfulCreations + " users created successfully!");
                         } catch (InterruptedException | IOException var9) {
-                            System.out.println("Error");
+                            System.out.println("Exception error: " + var9);
                             Thread.currentThread().interrupt();
                             break;
                         }
@@ -338,17 +317,21 @@ public class UserServiceImpl implements UserService {
                 }
 
             }
+            FileWriter writer = null;
+            try {
+                writer = new FileWriter("diary.txt", true);
+                writer.write("\n");
+                writer.write("=========================================================================================================================\n");
+                writer.write("\n");
+                writer.close();
+            } catch (Exception e) {
 
-            FileWriter writer = new FileWriter("diary.txt", true);
-            writer.write("\n");
-            writer.write("=========================================================================================================================\n");
-            writer.write("\n");
-            writer.close();
+            }
         }
     }
 
-    public void assignLicense(String userId) {
-        String skuId = "c42b9cae-ea4f-4ab7-9717-81576235ccac"; // SKU ID của giấy phép muốn gán
+    public void assignLicense(String userId, String skuId) {
+        //String skuId = "c42b9cae-ea4f-4ab7-9717-81576235ccac"; // SKU ID của giấy phép muốn gán
         String requestUrl = "https://graph.microsoft.com/v1.0/users/" + userId + "/assignLicense";
         try {
             URL url = new URL(requestUrl);
@@ -376,21 +359,35 @@ public class UserServiceImpl implements UserService {
                 }
                 // Parse the JSON string
                 JsonObject jsonObject = gson.fromJson(errorResponse.toString(), JsonObject.class);
-                // Get the value of the "message" property
-                if (jsonObject.getAsJsonObject("error").get("code").getAsString().equals("Request_ResourceNotFound")){
-                    System.out.println("User does not exist");
+
+                // Check if the "error" field is a JSON object
+                JsonElement errorElement = jsonObject.get("error");
+                if (errorElement != null && errorElement.isJsonObject()) {
+                    JsonObject errorObject = errorElement.getAsJsonObject();
+                    String code = errorObject.get("code").getAsString();
+                    if (code.equals("Request_ResourceNotFound")) {
+                        Color.printYellow("User does not exist");
+                    }
+                    String message = errorObject.get("message").getAsString();
+                    if (message.contains(" to the expected type 'Edm.Guid'")) {
+                        Color.printYellow("skuID not found");
+                    } else {
+                        Color.printYellow("Error: " + message);
+                    }
+                    //System.out.println("Error: " + message);
+                } else {
+                    Color.printYellow("Error: " + jsonObject.toString());
                 }
-                String message = jsonObject.getAsJsonObject("error").get("message").getAsString();
-                // Print the error message
-                System.out.println("Error: " + message);
             } else {
                 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                System.out.println("Assign license success");
-                System.out.println(in.readLine());
+                Color.printBlue("Assign license success");
+                Color.printBlue(in.readLine());
             }
             in.close();
         } catch (IOException e) {
-            System.out.println(e);
+            System.out.println("Exception error: " + e);
+        } catch (JsonSyntaxException e) {
+            System.out.println("Exception error parsing JSON response: " + e.getMessage());
         }
     }
 
@@ -408,8 +405,7 @@ public class UserServiceImpl implements UserService {
         JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
 
         JsonArray arrayValue = new JsonArray();
-        if (jsonObject.has("value"))
-        {
+        if (jsonObject.has("value")) {
             arrayValue = jsonObject.get("value").getAsJsonArray();
         }
 

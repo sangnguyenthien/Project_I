@@ -44,53 +44,8 @@ public class Config {
         Map<String, Object> map = gson.fromJson(jsonResponse, Map.class);
         List<Map<String, Object>> valueList = (List<Map<String, Object>>) map.get("value");
 
-        // Print the properties of each user
-        /*
-        int count = 1;
-        for (Map<String, Object> valueMap : valueList) {
-            System.out.println("User " + count);
-            count += 1;
-            for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
-                String key = entry.getKey();
-                Object val = entry.getValue();
-                System.out.println(key + ": " + val);
-            }
-            System.out.println();
-        }*/
+
     }
-
-
-    public static void deleteAllUsers(String path) {
-        try (CSVReader reader = new CSVReader(new FileReader(path))) {
-            List<String[]> rows = reader.readAll();
-
-            for (String[] row : rows) {
-                String userPrincipalName = row[2];
-                deleteUser(userPrincipalName);
-            }
-        } catch (IOException | CsvException | InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    public static void deleteUser(String userPrincipalName) throws IOException, InterruptedException {
-        String graphUrl = "https://graph.microsoft.com/v1.0/users/" + userPrincipalName;
-        String accessToken = getAccessToken();
-
-        URL url = new URL(graphUrl);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("DELETE");
-        con.setRequestProperty("Authorization", "Bearer " + accessToken);
-
-        int responseCode = con.getResponseCode();
-        if (responseCode >= 400) {
-            logger.log(Level.INFO,"Failed to delete user: {0}." , userPrincipalName);
-        } else {
-            logger.log(Level.INFO,"User deleted: {0}." , userPrincipalName);
-        }
-    }
-
     public static String getAccessToken() throws IOException, InterruptedException {
         JsonObject accessJson = JsonTool.getAccessInfo(configAzure);
         String TENANT_ID = accessJson.get("TENANT_ID").getAsString();

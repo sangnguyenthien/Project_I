@@ -17,24 +17,17 @@ public class Color {
         System.out.println(Ansi.ansi().fgYellow().a(text).reset());
     }
 
-    public static void printYellowNo(String text)
-    {
-        System.out.print(Ansi.ansi().fgYellow().a(text).reset());
-    }
     
     public static void printBlue(String text)
     {
         System.out.println(Ansi.ansi().fgBlue().a(text).reset());
     }
-
-    public static void printMagenta(String text)
-    {
-        System.out.println(Ansi.ansi().fgMagenta().a(text).reset());
-    }
-
     public static void printCyan(String text)
     {
         System.out.println(Ansi.ansi().fgCyan().a(text).reset());
     }
-    
+    public static void printCyanNo(String text)
+    {
+        System.out.print(Ansi.ansi().fgCyan().a(text).reset());
+    }
 }

@@ -8,8 +8,7 @@ import java.util.List;
 
 public class TaskScheduleForAntiRicons {
     public static void main(String[] args) throws Exception{
-        String configAirTable = Config.configAirTable;
-            
+        String configAirTable = "C:\\Users\\LamPhuss\\Downloads\\Project_I-main (1)\\Project_I-main\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAirTable.json";
         //Change the value of variable infoTaskSchedule to absolute path of infoTaskSchedule.json and start using
         String infoTaskSchedule = "D:\\java prj1\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\infoTaskSchedule.json";
         
