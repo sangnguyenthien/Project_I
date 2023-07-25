@@ -161,7 +161,9 @@ public class Table{
 
     public boolean pullAllRecords(List<JsonObject> fields, String baseId, String personal_access_token)
     {
-        int i = 1;
+        dropRecord(fields, baseId, personal_access_token);
+        
+        int index = 1;
         int full = fields.size();
         for (JsonObject field : fields)
         {
@@ -170,8 +172,8 @@ public class Table{
                 //print Cannot pull record: user ID in table name
                 return false;
             }
-            System.out.print("\r" + i + "/" + full);
-            i += 1;
+            System.out.print("\r" + index + "/" + full);
+            index += 1;
         }
         System.out.print("\n");
         //print Pulled all records in table name
@@ -187,6 +189,10 @@ public class Table{
             boolean isExist = false;
             for (JsonObject field : fields)
             {
+                if (record.getIdField() == null)
+                {
+                    break;
+                }
                 if (record.getIdField().equals(field.get("id").getAsString()))
                 {
                     isExist = true;
@@ -280,7 +286,7 @@ public class Table{
     }
     public void writeTableToXLSX(String filename, String baseId, String token)
     {
-        if (!filename.contains(".xlsx") || !filename.contains(".csv"))
+        if (!filename.contains(".xlsx") && !filename.contains(".csv"))
         {
             Color.printYellow("Invalid path, your path should be ended with .xlsx or .csv");
             Color.printYellow("Cannot write table");
