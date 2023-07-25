@@ -15,9 +15,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import template.jsonUtil.JsonTool;
 import template.persistence.dto.Group;
+import template.team_config.Config;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -337,6 +342,104 @@ public class GroupServiceImpl implements GroupService {
         } catch (IOException e) {
             System.out.println("Failed to list groups");
         }
+    }
+
+    public List<String[]> listIDsTeam() throws UnsupportedEncodingException {
+        // Set the request headers
+        HttpGet request = new HttpGet("https://graph.microsoft.com/v1.0/groups?$filter=" +
+                URLEncoder.encode("resourceProvisioningOptions/Any(x:x eq 'Team')", StandardCharsets.UTF_8.name()));
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpClient client = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .build();
+
+        try {
+
+            HttpResponse response = client.execute(request);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                //System.out.println("Error: Could not list tables");
+                return null;
+            }
+            //System.out.println("Listed tables");
+            HttpEntity entity = response.getEntity();
+            String responseString = EntityUtils.toString(entity);
+
+            JsonObject responseJsonObject = JsonParser.parseString(responseString).getAsJsonObject();
+
+            JsonArray valueJsonArray = new JsonArray();
+
+            if (responseJsonObject.has("value"))
+            {
+                valueJsonArray = responseJsonObject.get("value").getAsJsonArray();
+            }
+
+            List<String[]> idAndNameList = new ArrayList<>();
+
+            for (JsonElement element : valueJsonArray) {
+                JsonObject teamObject = element.getAsJsonObject();
+                String id = teamObject.get("id").getAsString();
+                String displayName = teamObject.get("displayName").getAsString();
+                String[] idAndName = {id, displayName};
+                idAndNameList.add(idAndName);
+            }
+            return idAndNameList;
+        }
+        catch (IOException e)
+        {
+            return null;
+        }
+    }
+    public String createLinkToTeam(String groupId) throws InterruptedException, UnsupportedEncodingException {
+        String TENANT_ID = JsonTool.getAccessInfo(configAzure).get("TENANT_ID").getAsString();
+
+        List<String[]> idAndNameList = listIDsTeam();
+
+        boolean isTeams = false;
+
+        for(String[] idAndName : idAndNameList)
+        {
+            if (groupId.equals(idAndName[0]))
+            {
+                isTeams = true;
+                break;
+            }
+        }
+
+        if (isTeams)
+        {
+            String channelsString = ChannelService.listAllChannels(groupId);
+            JsonObject channelsJsonObject = JsonParser.parseString(channelsString).getAsJsonObject();
+
+            JsonArray channelsJsonArray = new JsonArray();
+
+            if (channelsJsonObject.has("value"))
+            {
+                channelsJsonArray = channelsJsonObject.get("value").getAsJsonArray();
+            }
+
+            for (JsonElement element : channelsJsonArray) {
+                JsonObject channelObject = element.getAsJsonObject();
+                String channelId = channelObject.get("id").getAsString();
+                String displayName = channelObject.get("displayName").getAsString();
+                if (displayName.equals("General"))
+                {
+                    //return link to team
+                    String linkToTeam = "https://teams.microsoft.com/l/team/" + channelId + "/conversations?groupId=" + groupId +"&tenantId=" + TENANT_ID;
+                    return "https://teams.microsoft.com/l/team/" + URLEncoder.encode(channelId, StandardCharsets.UTF_8) + "/conversations?groupId=" + groupId +"&tenantId=" + TENANT_ID;
+                }
+            }
+            if (channelsJsonArray.size()>0)
+            {
+                JsonObject channelObject = channelsJsonArray.get(0).getAsJsonObject();
+                String channelId = channelObject.get("id").getAsString();
+                String displayName = channelObject.get("displayName").getAsString();
+                return "https://teams.microsoft.com/l/team/" + URLEncoder.encode(channelId, StandardCharsets.UTF_8) + "/conversations?groupId=" + groupId +"&tenantId=" + TENANT_ID;
+            }
+        }
+        return "Cannot create link to team";
     }
 
 }
