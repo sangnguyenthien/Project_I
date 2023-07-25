@@ -20,9 +20,7 @@ public class CLI {
 
     public static void showMenu()
     {
-        //Change the value of configAirTable and Config to absolute path of configAirTable.json and Config.json respectively
-        String configAirTable = "C:\\Users\\LamPhuss\\Downloads\\Project_I-main (1)\\Project_I-main\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAirTable.json";
-
+        String configAirTable = Config.configAirTable;
 
         String general = "----------------------------------------------\n" +
                 "            ANTI-RICONS Application\n" +
@@ -58,14 +56,16 @@ public class CLI {
                 "9. Get user by principal name\n" +
                 "10. Assign license for user\n" +
                 "11. List existed groupIDs\n" +
+                "12. List existed teams\n" +
+                "13. Create link to team\n" +
 
                 "--Airtable--\n" +
-                "12. Synchronize Users information in an organization to Airtable \n" +
-                "13. Synchronize Users information in a Team to Airtable\n" +
-                "14. Write to XLSX file\n" +
+                "14. Synchronize Users information in an organization to Airtable \n" +
+                "15. Synchronize Users information in a Team to Airtable\n" +
+                "16. Write to XLSX file\n" +
                 "----------------------------------------------\n" +
-                "15. Print help\n" +
-                "16. Exit";
+                "17. Print help\n" +
+                "18. Exit";
         try {
             while (true) {
                 Color.printGreen(general);
@@ -85,7 +85,7 @@ public class CLI {
                     Color.printYellow("Enter mailNickname: ");
                     String mailNickname = input.nextLine();
 
-                    Color.printYellow("Enter userPrincipalName (example@example.com):");
+                    Color.printYellow("Enter userPrincipalName: ");
                     String userPrincipalName = input.nextLine();
 
                     Color.printYellow("Enter password: ");
@@ -196,7 +196,25 @@ public class CLI {
                     Color.printYellow("-- List existed groupId --");
 
                     groupService.listIDsGroup();
-                } else if (option.equals("12")) {
+                }
+                else if (option.equals("12")) {
+                    Color.printYellow("-- List existed Teams --");
+
+                    List<String[]> idAndNameList = groupService.listIDsTeam();
+
+                    for(String[] idAndName : idAndNameList)
+                    {
+                        Color.printBlue("ID: " + idAndName[0] + ", name: " + idAndName[1]);
+                    }
+                }
+                else if (option.equals("13")) {
+                    Color.printYellow("-- Create link to team --");
+
+                    Color.printYellowNo("Enter groupId: ");
+                    String groupId = input.nextLine();
+
+                    Color.printBlue("Link to team is: " + groupService.createLinkToTeam(groupId));
+                }else if (option.equals("14")) {
                     Color.printYellow("-- Synchronize Users information in an organization to Airtable --");
 
                     // token MS
@@ -233,7 +251,7 @@ public class CLI {
                         Table tableObj = new Table(table, baseId, personal_access_token);
                         tableObj.pullAllRecords(fields, baseId, personal_access_token);
                     }
-                } else if (option.equals("13")) {
+                } else if (option.equals("15")) {
                     Color.printYellow("-- Synchronize Users information in an Team(Group) to Airtable --");
 
                     // token MS
@@ -272,7 +290,7 @@ public class CLI {
                         Table tableObj = new Table(table, baseId, personal_access_token);
                         tableObj.pullAllRecords(fields, baseId, personal_access_token);
                     }
-                } else if (option.equals("14")) {
+                } else if (option.equals("16")) {
                     Color.printYellow("-- Write table to XLSX file --");
 
                     //token Airtable
@@ -291,9 +309,9 @@ public class CLI {
                     Table table = new Table(fieldTable, baseId, personal_access_token);
 
                     table.writeTableToXLSX(filepath, baseId, personal_access_token);
-                } else if (option.equals("15")) {
+                } else if (option.equals("17")) {
                     Color.printGreen(general);
-                } else if (option.equals("16")) {
+                } else if (option.equals("18")) {
                     break;
                 } else {
                     continue;
@@ -308,7 +326,6 @@ public class CLI {
         }
         catch (IOException | InterruptedException e)
         {
-            Thread.currentThread().interrupt();
             System.out.println("Oops! We ran into some problems");
         }
     }
