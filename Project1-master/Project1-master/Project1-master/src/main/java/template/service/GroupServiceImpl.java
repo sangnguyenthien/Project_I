@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import template.colorUtil.Color;
 import template.jsonUtil.JsonTool;
 import template.persistence.dto.Group;
+import template.team_config.Config;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -27,11 +28,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static template.team_config.Config.configAzure;
+
 import static template.team_config.Config.getAccessToken;
 
 public class GroupServiceImpl implements GroupService {
-    private String configAzure = Config.configAzure;
+    private String configAzure = Config.getConfigAzure();
     private String token = getAccessToken();
     public static final JsonArray tableSetting = JsonParser.parseString("[\n" +
             "  {\n" +

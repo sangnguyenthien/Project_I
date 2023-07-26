@@ -23,8 +23,19 @@ public class Config {
     private static final Logger logger = Logger.getLogger(Config.class.getName());
 
     //Change the value of variable Config to absolute path of Config.json
-    public static String configAirTable = "C:\\Users\\LamPhuss\\Downloads\\Project_I-main (1)\\Project_I-main\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAirTable.json";
-    public static String configAzure = "C:\\Users\\LamPhuss\\Downloads\\Project_I-main (1)\\Project_I-main\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAzure.json";
+    private final static String configAirTable = "C:\\Users\\LamPhuss\\Downloads\\Project_I-main (1)\\Project_I-main\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAirTable.json";
+    private final static String configAzure = "C:\\Users\\LamPhuss\\Downloads\\Project_I-main (1)\\Project_I-main\\Project1-master\\Project1-master\\Project1-master\\src\\main\\java\\template\\accessInfo\\configAzure.json";
+
+    public static String getConfigAirTable()
+    {
+        return configAirTable;
+    }
+
+    public static String getConfigAzure()
+    {
+        return configAzure;
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException {
         String graphEndpoint = "https://graph.microsoft.com/v1.0/users";
         String token = getAccessToken(); // Replace with your actual access token

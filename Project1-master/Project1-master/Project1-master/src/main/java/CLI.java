@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class CLI {
 
     public static void showMenu() {
-        String configAirTable = Config.configAirTable;
+        String configAirTable = Config.getConfigAirTable();
 
         String general = "----------------------------------------------\n" +
                 "            ANTI-RICONS Application\n" +
