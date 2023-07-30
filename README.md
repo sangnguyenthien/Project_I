@@ -13,7 +13,7 @@
     Step 1: open "laplich.bat" file in the repository and change the path to your java.exe, and change the path to "TaskScheduleForAntiRicons" class file
     ##### You can config task schedule for 2 way
     ###### First way 
-    Step 2: open the task scheduler in the window search box
+    Step 2: open the Task Scheduler in the window search box
     Step 3: on the right hand box, click Create Task
     Step 4: enter the name of the task
     Step 5: at the Security options, choose "Run whether user is logged on or not" and select the "Do not store password ....". Finally, select "Run with highest privileges" box
